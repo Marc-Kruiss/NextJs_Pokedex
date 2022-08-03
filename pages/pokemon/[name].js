@@ -63,7 +63,8 @@ function PokemonDetail({ pokemon }) {
     return thumbnailUrls.map((url, index) => (
       <div
         key={index}
-        className="bg-slate-400 bg-opacity-10 rounded-full my-8 hover:bg-opacity-50"
+        className="bg-slate-400 bg-opacity-10 rounded-full my-8 hover:bg-opacity-50
+        transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300"
       >
         <button onClick={() => handleThumbnailClick(url)}>
           <Image

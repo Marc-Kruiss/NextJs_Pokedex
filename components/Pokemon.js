@@ -7,7 +7,8 @@ function Pokemon({ pokemon, index }) {
 
   return (
     <Link href={`/pokemon/${pokemon.name}`}>
-      <div className="bg-slate-900 rounded p-5 flex flex-col justify-center items-center relative shadow-md">
+      <div className="bg-slate-900 rounded p-5 flex flex-col justify-center items-center relative shadow-md
+      transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300">
         <span className="absolute text-5xl text-slate-500 top-0 right-3 font-bold">
           #{pokeIndex}
         </span>

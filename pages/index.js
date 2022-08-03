@@ -13,7 +13,7 @@ export default function Home({ initialPokemon }) {
     const response = await fetch(url);
     const nextPokemon = await response.json();
 
-    setOffset(next ? offset + 20 : offset - 10);
+    setOffset(isNext ? offset + 20 : offset - 20);
     setPokemon(nextPokemon);
   };
 

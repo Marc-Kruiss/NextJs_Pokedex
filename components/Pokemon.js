@@ -17,6 +17,8 @@ function Pokemon({ pokemon, index }) {
           height={150}
           width={150}
           alt={pokemon.name}
+          placeholder={"blur"}
+          blurDataURL="/blackedPokemon.png"
         />
         <span className="uppercase font-semibold tracking-wider text-amber-400">
           {pokemon.name}

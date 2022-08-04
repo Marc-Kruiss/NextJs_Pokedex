@@ -1,12 +1,14 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
+import Pokemon from "../../components/Pokemon";
 import { getTypeColor } from "../../components/TypeColor";
 
-function PokemonDetail({ pokemon }) {
+function PokemonDetail({ pokemon, species, previousPokemon }) {
   //#region useStates
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
+  const [speciesInfo, setSpeciesInfo] = useState(species);
   const [pokeIndex, setPokeIndex] = useState(
     ("000" + pokemon.id).slice(-3).toString()
   );
@@ -14,6 +16,8 @@ function PokemonDetail({ pokemon }) {
 
   //#region useEffect
   useEffect(() => {
+    console.log("Species");
+    console.log(speciesInfo);
     // set big image url
     setSelectedImageUrl(
       `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
@@ -44,7 +48,7 @@ function PokemonDetail({ pokemon }) {
         <li
           key={type.slot}
           className={`px-2 py-1 rounded text-white`}
-          style={{backgroundColor:`${color}`}}
+          style={{ backgroundColor: `${color}` }}
         >
           {type.type.name}
         </li>
@@ -116,6 +120,9 @@ function PokemonDetail({ pokemon }) {
         <ul className="flex gap-5">{renderTypes()}</ul>
 
         <div>{renderStats()}</div>
+        <div>
+          <Pokemon pokemon={previousPokemon} index={pokemon.id-1} />
+        </div>
       </div>
     </Layout>
   );
@@ -125,14 +132,30 @@ export default PokemonDetail;
 
 export async function getServerSideProps(context) {
   try {
-    const response = await fetch(
+    const poke_response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${context.query.name}`
     );
-    const pokemon = await response.json();
+    const pokemon = await poke_response.json();
+
+    // get species info
+    const species_info_url = pokemon.species.url;
+    console.log(species_info_url);
+    const species_response = await fetch(species_info_url);
+    const species = await species_response.json();
+
+    // get previous Pokemon if not a baby
+    let previousPokemon = null;
+    if (!species.is_baby) {
+      const previousPokemonUrl = species.evolves_from_species.url;
+      const previous_species_response = await fetch(previousPokemonUrl);
+      previousPokemon = await previous_species_response.json();
+    }
 
     return {
       props: {
         pokemon,
+        species,
+        previousPokemon,
       },
     };
   } catch (error) {

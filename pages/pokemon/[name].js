@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import Layout from "../../components/Layout";
+import { getTypeColor } from "../../components/TypeColor";
 
 function PokemonDetail({ pokemon }) {
   //#region useStates
@@ -14,7 +15,6 @@ function PokemonDetail({ pokemon }) {
   //#region useEffect
   useEffect(() => {
     // set big image url
-    console.log(pokeIndex);
     setSelectedImageUrl(
       `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
     );
@@ -38,11 +38,18 @@ function PokemonDetail({ pokemon }) {
 
   //#region Functions
   const renderTypes = () =>
-    pokemon.types.map((type) => (
-      <li key={type.slot} className="px-2 py-1 bg-slate-700 rounded">
-        {type.type.name}
-      </li>
-    ));
+    pokemon.types.map((type) => {
+      const color = getTypeColor(type.type.name);
+      return (
+        <li
+          key={type.slot}
+          className={`px-2 py-1 rounded text-white`}
+          style={{backgroundColor:`${color}`}}
+        >
+          {type.type.name}
+        </li>
+      );
+    });
 
   const renderStats = () =>
     pokemon.stats.map((stat, index) => (
@@ -59,7 +66,6 @@ function PokemonDetail({ pokemon }) {
   const renderImages = () => {
     const spriteNames = ["front_default", "back_default"];
     const { sprites } = pokemon;
-    console.log(thumbnailUrls);
     return thumbnailUrls.map((url, index) => (
       <div
         key={index}
@@ -118,14 +124,20 @@ function PokemonDetail({ pokemon }) {
 export default PokemonDetail;
 
 export async function getServerSideProps(context) {
-  const response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${context.query.name}`
-  );
-  const pokemon = await response.json();
+  try {
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${context.query.name}`
+    );
+    const pokemon = await response.json();
 
-  return {
-    props: {
-      pokemon,
-    },
-  };
+    return {
+      props: {
+        pokemon,
+      },
+    };
+  } catch (error) {
+    return {
+      notFound: true,
+    };
+  }
 }

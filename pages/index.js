@@ -16,7 +16,7 @@ export default function Home({ initialPokemon }) {
     setOffset(isNext ? offset + 20 : offset - 20);
     setPokemon(nextPokemon);
   };
-
+  
   return (
     <Layout title="PokeDex">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10">

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import Layout from "../../components/Layout";
 import Pokemon from "../../components/Pokemon";
 import { getTypeColor } from "../../components/TypeColor";
@@ -164,3 +165,9 @@ export async function getServerSideProps(context) {
     };
   }
 }
+
+const fetcher = async (url) => {
+  const response = await fetch(key);
+  const data = await response.json();
+  return data;
+};

@@ -122,7 +122,9 @@ function PokemonDetail({ pokemon, species, previousPokemon }) {
 
         <div>{renderStats()}</div>
         <div>
-          <Pokemon pokemon={previousPokemon} index={pokemon.id-1} />
+          {
+            previousPokemon? <Pokemon pokemon={previousPokemon} index={pokemon.id-1} />:null
+          }
         </div>
       </div>
     </Layout>
@@ -146,7 +148,7 @@ export async function getServerSideProps(context) {
 
     // get previous Pokemon if not a baby
     let previousPokemon = null;
-    if (!species.is_baby) {
+    if (species.evolves_from_species) {
       const previousPokemonUrl = species.evolves_from_species.url;
       const previous_species_response = await fetch(previousPokemonUrl);
       previousPokemon = await previous_species_response.json();

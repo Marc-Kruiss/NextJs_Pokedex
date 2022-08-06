@@ -122,9 +122,9 @@ function PokemonDetail({ pokemon, species, previousPokemon }) {
 
         <div>{renderStats()}</div>
         <div>
-          {
-            previousPokemon? <Pokemon pokemon={previousPokemon} index={pokemon.id-1} />:null
-          }
+          {previousPokemon ? (
+            <Pokemon pokemon={previousPokemon} index={pokemon.id - 1} />
+          ) : null}
         </div>
       </div>
     </Layout>
@@ -154,6 +154,10 @@ export async function getServerSideProps(context) {
       previousPokemon = await previous_species_response.json();
     }
 
+    // get evolving - chain
+    const evolvingChain = await getEvolvingChain(species);
+    console.log(evolvingChain)
+
     return {
       props: {
         pokemon,
@@ -173,3 +177,21 @@ const fetcher = async (url) => {
   const data = await response.json();
   return data;
 };
+
+async function getEvolvingChain(species) {
+
+  const evolutionChainUrl = species.evolution_chain.url;
+  const evolutionChainResponse = await fetch(evolutionChainUrl);
+  const evolutionChain = await evolutionChainResponse.json();
+
+  var names = [];
+
+  var chainState = evolutionChain.chain;
+  while (chainState.evolves_to.length != 0) {
+    // while next evolution exists
+    names = [...names, chainState.species.name];
+    chainState = chainState.evolves_to[0];
+  }
+  names = [...names,chainState.species.name]
+  return names;
+}

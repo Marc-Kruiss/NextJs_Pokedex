@@ -4,7 +4,6 @@ import Link from "next/link";
 
 function Pokemon({ pokemon, index }) {
   const pokeIndex = ("000" + (index + 1)).slice(-3);
-
   return (
     <Link href={`/pokemon/${pokemon.name}`}>
       <div className="bg-slate-900 rounded p-5 flex flex-col justify-center items-center relative shadow-md

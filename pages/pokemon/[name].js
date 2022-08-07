@@ -5,11 +5,10 @@ import Layout from "../../components/Layout";
 import Pokemon from "../../components/Pokemon";
 import { getTypeColor } from "../../components/TypeColor";
 
-function PokemonDetail({ pokemon, species, previousPokemon }) {
+function PokemonDetail({ pokemon, evolvingChainNames }) {
   //#region useStates
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [thumbnailUrls, setThumbnailUrls] = useState([]);
-  const [speciesInfo, setSpeciesInfo] = useState(species);
   const [pokeIndex, setPokeIndex] = useState(
     ("000" + pokemon.id).slice(-3).toString()
   );
@@ -17,8 +16,6 @@ function PokemonDetail({ pokemon, species, previousPokemon }) {
 
   //#region useEffect
   useEffect(() => {
-    console.log("Species");
-    console.log(speciesInfo);
     // set big image url
     setSelectedImageUrl(
       `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
@@ -70,7 +67,6 @@ function PokemonDetail({ pokemon, species, previousPokemon }) {
 
   const renderImages = () => {
     const spriteNames = ["front_default", "back_default"];
-    const { sprites } = pokemon;
     return thumbnailUrls.map((url, index) => (
       <div
         key={index}
@@ -122,9 +118,11 @@ function PokemonDetail({ pokemon, species, previousPokemon }) {
 
         <div>{renderStats()}</div>
         <div>
-          {previousPokemon ? (
-            <Pokemon pokemon={previousPokemon} index={pokemon.id - 1} />
-          ) : null}
+          {evolvingChainNames
+            ? evolvingChainNames.map((pokeName) => (
+                <Pokemon pokemonName={pokeName} />
+              ))
+            : null}
         </div>
       </div>
     </Layout>
@@ -142,27 +140,17 @@ export async function getServerSideProps(context) {
 
     // get species info
     const species_info_url = pokemon.species.url;
-    console.log(species_info_url);
     const species_response = await fetch(species_info_url);
     const species = await species_response.json();
 
-    // get previous Pokemon if not a baby
-    let previousPokemon = null;
-    if (species.evolves_from_species) {
-      const previousPokemonUrl = species.evolves_from_species.url;
-      const previous_species_response = await fetch(previousPokemonUrl);
-      previousPokemon = await previous_species_response.json();
-    }
-
     // get evolving - chain
-    const evolvingChain = await getEvolvingChain(species);
-    console.log(evolvingChain)
+    const evolvingChainNames = await getEvolvingChainNames(species);
+    console.log(evolvingChainNames);
 
     return {
       props: {
         pokemon,
-        species,
-        previousPokemon,
+        evolvingChainNames,
       },
     };
   } catch (error) {
@@ -178,8 +166,7 @@ const fetcher = async (url) => {
   return data;
 };
 
-async function getEvolvingChain(species) {
-
+async function getEvolvingChainNames(species) {
   const evolutionChainUrl = species.evolution_chain.url;
   const evolutionChainResponse = await fetch(evolutionChainUrl);
   const evolutionChain = await evolutionChainResponse.json();
@@ -192,6 +179,6 @@ async function getEvolvingChain(species) {
     names = [...names, chainState.species.name];
     chainState = chainState.evolves_to[0];
   }
-  names = [...names,chainState.species.name]
+  names = [...names, chainState.species.name];
   return names;
 }

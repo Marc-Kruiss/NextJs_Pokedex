@@ -21,7 +21,7 @@ export default function Home({ initialPokemon }) {
     <Layout title="PokeDex">
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10">
         {pokemon.results.map((monster, index) => (
-          <Pokemon key={index} pokemon={monster} index={index + offset} />
+          <Pokemon key={index} pokemonName={monster.name} />
         ))}
       </div>
 

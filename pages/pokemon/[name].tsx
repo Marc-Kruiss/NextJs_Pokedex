@@ -5,10 +5,11 @@ import Layout from "../../components/Layout";
 import Pokemon from "../../components/Pokemon";
 import { getTypeColor } from "../../components/TypeColor";
 
+
 function PokemonDetail({ pokemon, evolvingChainNames }) {
   //#region useStates
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
-  const [thumbnailUrls, setThumbnailUrls] = useState([]);
+  const [thumbnailUrls, setThumbnailUrls] = useState<string[]>([]);
   const [pokeIndex, setPokeIndex] = useState(
     ("000" + pokemon.id).slice(-3).toString()
   );
@@ -24,7 +25,7 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
     // set thumbnail image urls
     const spriteNames = ["front_default", "back_default"];
 
-    const initThumbnailUrls = spriteNames.map((spriteName) =>
+    const initThumbnailUrls:string[] = spriteNames.map((spriteName) =>
       pokemon.sprites[spriteName] ? pokemon.sprites[spriteName] : null
     );
     initThumbnailUrls.push(
@@ -35,7 +36,7 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
   //#endregion
 
   //#region Variables
-  const pokeName = pokemon.name[0].toUpperCase() + pokemon.name.slice(1);
+  const pokeName:string = pokemon.name[0].toUpperCase() + pokemon.name.slice(1);
   //#endregion
 
   //#region Functions
@@ -120,7 +121,7 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
         <div>
           {evolvingChainNames
             ? evolvingChainNames.map((pokeName) => (
-                <Pokemon pokemonName={pokeName} />
+                <Pokemon name={pokeName} url={} />
               ))
             : null}
         </div>
@@ -160,18 +161,12 @@ export async function getServerSideProps(context) {
   }
 }
 
-const fetcher = async (url) => {
-  const response = await fetch(key);
-  const data = await response.json();
-  return data;
-};
-
 async function getEvolvingChainNames(species) {
   const evolutionChainUrl = species.evolution_chain.url;
   const evolutionChainResponse = await fetch(evolutionChainUrl);
   const evolutionChain = await evolutionChainResponse.json();
 
-  var names = [];
+  var names:string[] = [];
 
   var chainState = evolutionChain.chain;
   while (chainState.evolves_to.length != 0) {

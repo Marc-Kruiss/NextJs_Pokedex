@@ -1,4 +1,4 @@
-const typeColors = {
+const typeColors:Record<string,string> = {
     normal:"#64ff00",
     fighting:"#8f8b52",
     flying:"#baf8ff9e",
@@ -21,7 +21,7 @@ const typeColors = {
     shadow:"#312e2e",
 }
 
-export function getTypeColor(name){
+export function getTypeColor(name:string){
     const color = typeColors[name]
     console.log(name+': '+color)
     return color

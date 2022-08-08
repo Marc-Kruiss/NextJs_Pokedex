@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-function Pokemon({ pokemonName }) {
+interface Props {
+  name: string;
+}
+
+function Pokemon({name}: Props) {
   //const pokeIndex = ("000" + (index + 1)).slice(-3);
-  const [pokeIndex, setPokeIndex] = useState();
+  const [pokemonName, setPokemonName] = useState(name)
+  const [pokeIndex, setPokeIndex] = useState("");
 
   const getPokeIndex = async () => {
     const poke_response = await fetch(
@@ -15,7 +20,9 @@ function Pokemon({ pokemonName }) {
     setPokeIndex(indexValue);
   };
 
-  useEffect(() => {getPokeIndex()},[]);
+  useEffect(() => {
+    getPokeIndex();
+  }, []);
 
   return (
     <Link href={`/pokemon/${pokemonName}`}>

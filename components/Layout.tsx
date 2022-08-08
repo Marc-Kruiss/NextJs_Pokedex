@@ -1,10 +1,15 @@
 import Head from "next/head";
-import React from "react";
+import React, { FC } from "react";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
-function Layout({ children, title }) {
+interface Props{
+  children:React.ReactNode,
+  title:string
+}
+
+const Layout:FC<Props>=({ children, title })=> {
   return (
     <div>
       <Head>

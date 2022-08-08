@@ -1,12 +1,17 @@
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
 import Layout from "../../components/Layout";
 import Pokemon from "../../components/Pokemon";
 import { getTypeColor } from "../../components/TypeColor";
+import { IPokemonBase } from "../../components/types/IPokemonBase";
 
+interface Props{
+  
+}
 
-function PokemonDetail({ pokemon, evolvingChainNames }) {
+function PokemonDetail({ pokemon, evolvingChainPokemons }:IPokemonBase) {
   //#region useStates
   const [selectedImageUrl, setSelectedImageUrl] = useState("");
   const [thumbnailUrls, setThumbnailUrls] = useState<string[]>([]);
@@ -26,7 +31,7 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
     const spriteNames = ["front_default", "back_default"];
 
     const initThumbnailUrls:string[] = spriteNames.map((spriteName) =>
-      pokemon.sprites[spriteName] ? pokemon.sprites[spriteName] : null
+      pokemon.sprites[spriteName] ? pokemon.sprites[spriteName] : ""
     );
     initThumbnailUrls.push(
       `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
@@ -41,15 +46,15 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
 
   //#region Functions
   const renderTypes = () =>
-    pokemon.types.map((type) => {
-      const color = getTypeColor(type.type.name);
+    pokemon.types.map((type, index) => {
+      const color = getTypeColor(type.name);
       return (
         <li
-          key={type.slot}
+          key={index}
           className={`px-2 py-1 rounded text-white`}
           style={{ backgroundColor: `${color}` }}
         >
-          {type.type.name}
+          {type.name}
         </li>
       );
     });
@@ -88,7 +93,7 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
     ));
   };
 
-  const handleThumbnailClick = (thumbnailUrl) => {
+  const handleThumbnailClick = (thumbnailUrl:string) => {
     setSelectedImageUrl(thumbnailUrl);
   };
 
@@ -119,9 +124,12 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
 
         <div>{renderStats()}</div>
         <div>
-          {evolvingChainNames
-            ? evolvingChainNames.map((pokeName) => (
-                <Pokemon name={pokeName} url={} />
+          {evolvingChainPokemons
+            ? evolvingChainPokemons.map((pokemonUrl,index) => (
+              <div key={index}>
+                <Pokemon name={pokemonUrl.name} />
+              </div>
+                
               ))
             : null}
         </div>
@@ -132,7 +140,7 @@ function PokemonDetail({ pokemon, evolvingChainNames }) {
 
 export default PokemonDetail;
 
-export async function getServerSideProps(context) {
+export const getServerSideProps:GetServerSideProps=async(context) => {
   try {
     const poke_response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${context.query.name}`
@@ -161,7 +169,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-async function getEvolvingChainNames(species) {
+async function getEvolvingChainNames(species: { evolution_chain: { url: any; }; }) {
   const evolutionChainUrl = species.evolution_chain.url;
   const evolutionChainResponse = await fetch(evolutionChainUrl);
   const evolutionChain = await evolutionChainResponse.json();

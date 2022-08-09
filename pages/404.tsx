@@ -9,8 +9,8 @@ function NotFound() {
         Page Not Found
       </h1>
       <button className="bg-gray-800 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 rounded-3xl p-3">
-      <a href={"/"} className="text-4xl">
-          Home 
+        <a href={"/"} className="text-4xl">
+          Home
         </a>
       </button>
     </div>

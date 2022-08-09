@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Pokemon from "../components/Pokemon";
 import { GetStaticProps } from "next";
 import { PokemonListResponse } from "../components/types/PokemonInterfaces";
+import { mapPokemonListResponse } from "../components/helper/mapper";
 
 export default function Home({
   initialPokemon,
@@ -16,13 +17,7 @@ export default function Home({
     const response = await fetch(url);
     const nextPokemon: PokemonListResponse = await response
       .json()
-      .then((value) => {
-        return {
-          nextUrl: value.next,
-          previousUrl: value.previous,
-          pokemonList: value.results,
-        };
-      });
+      .then((value) => mapPokemonListResponse(value));
 
     setOffset(isNext ? offset + 20 : offset - 20);
     setPokemon(nextPokemon);
@@ -61,13 +56,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
   const initialPokemon: PokemonListResponse = await response
     .json()
-    .then((value) => {
-      return {
-        nextUrl: value.next,
-        previousUrl: value.previous,
-        pokemonList: value.results,
-      };
-    });
+    .then((value) => mapPokemonListResponse(value));
 
   return {
     props: {

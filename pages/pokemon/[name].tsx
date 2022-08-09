@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
+import { mapPokemonInfo } from "../../components/helper/mapper";
 import {
   getEvolvingChainNamesByUrl,
   getFilteredSprites,
@@ -136,28 +137,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const poke_response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${context.query.name}`
     );
-    const pokemon = await poke_response.json();
+    const pokemon_json = await poke_response.json();
 
     // get species info
-    const species_info_url = pokemon.species.url;
+    const species_info_url = pokemon_json.species.url;
     const species_response = await fetch(species_info_url);
     const pokemonInfo: IPokemonInfo = await species_response
       .json()
-      .then((value) => {
-        return {
-          id: value.id,
-          name: value.name,
-          stats: pokemon.stats,
-          types: pokemon.types,
-          sprites: pokemon.sprites,
-          evolution_chain_url: value.evolution_chain.url,
-        };
-      });
+      .then((species_json) => mapPokemonInfo(species_json, pokemon_json));
 
     // get evolving - chain
     const evolvingChainPokemons = await getEvolvingChainNamesByUrl(
       pokemonInfo.evolution_chain_url,
-      pokemon.name
+      pokemon_json.name
     );
 
     return {

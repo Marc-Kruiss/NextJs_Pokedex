@@ -2,13 +2,8 @@ import Layout from "../components/Layout";
 import React, { useState } from "react";
 import Pokemon from "../components/Pokemon";
 import { GetStaticProps } from "next";
-import { numberToThreeBasedString } from "../components/helper/utilities";
+import { PokemonListResponse } from "../components/types/PokemonInterfaces";
 
-interface PokemonListResponse {
-  pokemonList: { name: string; url: string }[]; // replace with IPokemonBase interface
-  previousUrl: string;
-  nextUrl: string;
-}
 export default function Home({
   initialPokemon,
 }: {

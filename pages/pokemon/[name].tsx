@@ -2,7 +2,11 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import useSWR from "swr";
-import { numberToThreeBasedString } from "../../components/helper/utilities";
+import {
+  getEvolvingChainNamesByUrl,
+  getFilteredSprites,
+  numberToThreeBasedString,
+} from "../../components/helper/utilities";
 import Layout from "../../components/Layout";
 import Pokemon from "../../components/Pokemon";
 import { getTypeColor } from "../../components/TypeColor";
@@ -10,9 +14,7 @@ import {
   IChainEntry,
   IPokemonBase,
   IPokemonInfo,
-} from "../../components/types/IPokemonBase";
-
-interface Props {}
+} from "../../components/types/PokemonInterfaces";
 
 function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   //#region Variables
@@ -22,30 +24,30 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   const pokeName: string =
     pokemonInfo.name[0].toUpperCase() + pokemonInfo.name.slice(1);
 
-  
-  let thumbnailUrls: string[] = getPokemonImages(
+  let thumbnailUrls: string[] = getFilteredSprites(
     pokeIndex,
     pokemonInfo.sprites
   );
-  const [selectedImageUrl, setSelectedImageUrl] = useState(thumbnailUrls.slice(-1)[0]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState(
+    thumbnailUrls.slice(-1)[0]
+  );
   //#endregion
 
   useEffect(() => {
-    setSelectedImageUrl(thumbnailUrls.slice(-1)[0])
-  }, [pokeIndex])
-  
+    setSelectedImageUrl(thumbnailUrls.slice(-1)[0]);
+  }, [pokeIndex]);
 
   //#region Functions
   const renderTypes = () =>
     pokemonInfo.types.map((type, index) => {
-      const color = getTypeColor(type.name);
+      const color = getTypeColor(type.type.name);
       return (
         <li
-          key={index}
+          key={type.slot}
           className={`px-2 py-1 rounded text-white`}
           style={{ backgroundColor: `${color}` }}
         >
-          {type.name}
+          {type.type.name}
         </li>
       );
     });
@@ -62,15 +64,26 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
       </div>
     ));
 
+  const renderEvolutionChain = () =>
+    evolvingChainPokemons
+      ? evolvingChainPokemons.map((chainEntry, index) => (
+          <div key={index}>
+            <Pokemon
+              name={chainEntry.name}
+              index={pokemonInfo.id + chainEntry.indexOffset - 1}
+            />
+          </div>
+        ))
+      : null;
+
   const renderImages = () => {
-    const spriteNames = ["front_default", "back_default"];
     return thumbnailUrls.map((url, index) => (
       <div
         key={index}
         className="bg-slate-400 bg-opacity-10 rounded-full my-8 hover:bg-opacity-50
         transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300"
       >
-        <button onClick={() => handleThumbnailClick(url)}>
+        <button onClick={() => setSelectedImageUrl(url)}>
           <Image
             src={`${url}`}
             height={200}
@@ -82,10 +95,6 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
         </button>
       </div>
     ));
-  };
-
-  const handleThumbnailClick = (thumbnailUrl: string) => {
-    setSelectedImageUrl(thumbnailUrl);
   };
 
   //#endregion
@@ -114,18 +123,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
         <ul className="flex gap-5">{renderTypes()}</ul>
 
         <div>{renderStats()}</div>
-        <div>
-          {evolvingChainPokemons
-            ? evolvingChainPokemons.map((chainEntry, index) => (
-                <div key={index}>
-                  <Pokemon
-                    name={chainEntry.name}
-                    index={pokemonInfo.id + chainEntry.indexOffset - 1}
-                  />
-                </div>
-              ))
-            : null}
-        </div>
+        <div>{renderEvolutionChain()}</div>
       </div>
     </Layout>
   );
@@ -157,7 +155,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       });
 
     // get evolving - chain
-    const evolvingChainPokemons = await getEvolvingChainNames(
+    const evolvingChainPokemons = await getEvolvingChainNamesByUrl(
       pokemonInfo.evolution_chain_url,
       pokemon.name
     );
@@ -174,50 +172,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
-
-async function getEvolvingChainNames(
-  evolution_chain_url: string,
-  currentPokeName: string
-) {
-  const evolutionChainUrl = evolution_chain_url;
-  const evolutionChainResponse = await fetch(evolutionChainUrl);
-  const evolutionChain = await evolutionChainResponse.json();
-
-  var names: string[] = [];
-
-  var chainState = evolutionChain.chain;
-  while (chainState.evolves_to.length != 0) {
-    // while next evolution exists
-    names = [...names, chainState.species.name];
-    chainState = chainState.evolves_to[0];
-  }
-  names = [...names, chainState.species.name];
-
-  const localCurrentIndex = names.findIndex(
-    (n) => n.toLowerCase() === currentPokeName.toLowerCase()
-  );
-
-  let chainEntries: IChainEntry[] = new Array<IChainEntry>(names.length);
-  for (let i = 0; i < names.length; i++) {
-    chainEntries[i] = {
-      indexOffset: i - localCurrentIndex,
-      name: names[i],
-    };
-  }
-
-  return chainEntries;
-}
-function getPokemonImages(
-  pokeIndex:string,
-  sprites: Record<string, string>
-): string[] {
-  // set thumbnail image urls
-  const spriteNames = ["front_default", "back_default"];
-
-  const initThumbnailUrls: string[] = spriteNames.map((spriteName) =>
-    sprites[spriteName] ? sprites[spriteName] : ""
-  );
-  
-  initThumbnailUrls.push(`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`);
-  return initThumbnailUrls;
-}

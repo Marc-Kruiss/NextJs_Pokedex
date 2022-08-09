@@ -4,7 +4,7 @@ import Image from "next/image";
 function NotFound() {
   return (
     <div className='grid place-items-center h-screen items-center"'>
-      <Image src={"/blackedPokemon.png"} height={500} width={500} />
+      <Image src={"/blackedPokemon.png"} height={500} width={500} alt="blacked_pokemon"/>
       <h1 className="absolute text-center translate-y-52 text-9xl font-mono">
         Page Not Found
       </h1>

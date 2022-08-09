@@ -8,9 +8,7 @@ interface Props {
 }
 
 function Pokemon({ name, index }: Props) {
-  console.log(name, index);
   const pokeIndex = ("000" + (index + 1)).slice(-3);
-  console.log(pokeIndex);
 
   return (
     <Link href={`/pokemon/${name}`}>

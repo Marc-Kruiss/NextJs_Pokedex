@@ -15,40 +15,25 @@ import {
 interface Props {}
 
 function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
-  //#region useStates
-  const [selectedImageUrl, setSelectedImageUrl] = useState("");
-  const [thumbnailUrls, setThumbnailUrls] = useState<string[]>([]);
-  const [pokeIndex, setPokeIndex] = useState(
-    ("000" + pokemonInfo.id).slice(-3).toString()
-  );
-  useState
-  //#endregion
-
-  //#region useEffect
-  useEffect(() => {
-    console.log(pokemonInfo)
-    // set big image url
-    setSelectedImageUrl(
-      `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
-    );
-
-    // set thumbnail image urls
-    const spriteNames = ["front_default", "back_default"];
-
-    const initThumbnailUrls: string[] = spriteNames.map((spriteName) =>
-      pokemonInfo.sprites[spriteName] ? pokemonInfo.sprites[spriteName] : ""
-    );
-    initThumbnailUrls.push(
-      `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
-    );
-    setThumbnailUrls(initThumbnailUrls);
-  }, []);
-  //#endregion
-
   //#region Variables
+
+  let pokeIndex = ("000" + pokemonInfo.id).slice(-3).toString();
+
   const pokeName: string =
     pokemonInfo.name[0].toUpperCase() + pokemonInfo.name.slice(1);
+
+  
+  let thumbnailUrls: string[] = getPokemonImages(
+    pokeIndex,
+    pokemonInfo.sprites
+  );
+  const [selectedImageUrl, setSelectedImageUrl] = useState(thumbnailUrls.slice(-1)[0]);
   //#endregion
+
+  useEffect(() => {
+    setSelectedImageUrl(thumbnailUrls.slice(-1)[0])
+  }, [pokeIndex])
+  
 
   //#region Functions
   const renderTypes = () =>
@@ -133,7 +118,10 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
           {evolvingChainPokemons
             ? evolvingChainPokemons.map((chainEntry, index) => (
                 <div key={index}>
-                  <Pokemon name={chainEntry.name} index={pokemonInfo.id+chainEntry.indexOffset-1} />
+                  <Pokemon
+                    name={chainEntry.name}
+                    index={pokemonInfo.id + chainEntry.indexOffset - 1}
+                  />
                 </div>
               ))
             : null}
@@ -162,7 +150,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           id: value.id,
           name: value.name,
           stats: pokemon.stats,
-          types:pokemon.types,
+          types: pokemon.types,
           sprites: pokemon.sprites,
           evolution_chain_url: value.evolution_chain.url,
         };
@@ -188,7 +176,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 async function getEvolvingChainNames(
-  evolution_chain_url:string,
+  evolution_chain_url: string,
   currentPokeName: string
 ) {
   const evolutionChainUrl = evolution_chain_url;
@@ -218,4 +206,18 @@ async function getEvolvingChainNames(
   }
 
   return chainEntries;
+}
+function getPokemonImages(
+  pokeIndex:string,
+  sprites: Record<string, string>
+): string[] {
+  // set thumbnail image urls
+  const spriteNames = ["front_default", "back_default"];
+
+  const initThumbnailUrls: string[] = spriteNames.map((spriteName) =>
+    sprites[spriteName] ? sprites[spriteName] : ""
+  );
+  
+  initThumbnailUrls.push(`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`);
+  return initThumbnailUrls;
 }

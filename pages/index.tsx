@@ -1,34 +1,43 @@
 import Layout from "../components/Layout";
-import { useState } from "react";
+import React, { useState } from "react";
 import Pokemon from "../components/Pokemon";
-import React from "react";
 import { GetStaticProps } from "next";
-import { IPokemonUrl } from "../components/types/IPokemonUrl";
+import { numberToThreeBasedString } from "../components/helper/utilities";
 
 interface PokemonListResponse {
   pokemonList: { name: string; url: string }[]; // replace with IPokemonBase interface
   previousUrl: string;
   nextUrl: string;
 }
-export default function Home(initialPokemon: PokemonListResponse) {
+export default function Home({
+  initialPokemon,
+}: {
+  initialPokemon: PokemonListResponse;
+}) {
   const [pokemon, setPokemon] = useState<PokemonListResponse>(initialPokemon);
   const [offset, setOffset] = useState(0);
 
   const fetchPokemon = async (url: string, isNext: boolean) => {
     const response = await fetch(url);
-    const nextPokemon = await response.json();
+    const nextPokemon: PokemonListResponse = await response
+      .json()
+      .then((value) => {
+        return {
+          nextUrl: value.next,
+          previousUrl: value.previous,
+          pokemonList: value.results,
+        };
+      });
 
     setOffset(isNext ? offset + 20 : offset - 20);
     setPokemon(nextPokemon);
   };
 
   return (
-    <Layout title="PokeDex">
+    <Layout title={"PokeDex"}>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10">
-        {pokemon.pokemonList?.map((info, index) => (
-          <div key={index}>
-            <Pokemon name={info.name} />
-          </div>
+        {pokemon.pokemonList.map((info, index) => (
+          <Pokemon name={info.name} key={index} index={offset + index} />
         ))}
       </div>
 
@@ -52,7 +61,7 @@ export default function Home(initialPokemon: PokemonListResponse) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps = async (context) => {
   const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
 
   const initialPokemon: PokemonListResponse = await response
@@ -64,10 +73,10 @@ export const getStaticProps: GetStaticProps = async () => {
         pokemonList: value.results,
       };
     });
-  console.log(initialPokemon);
+
   return {
     props: {
-      initialPokemon,
+      initialPokemon: initialPokemon,
     },
   };
 };

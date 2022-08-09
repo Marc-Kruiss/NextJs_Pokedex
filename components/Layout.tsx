@@ -4,12 +4,12 @@ import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import Link from "next/link";
 
-interface Props{
-  children:React.ReactNode,
-  title:string
+interface Props {
+  children: React.ReactNode;
+  title: string;
 }
 
-const Layout:FC<Props>=({ children, title })=> {
+const Layout: FC<Props> = ({ children, title }) => {
   return (
     <div>
       <Head>
@@ -42,6 +42,6 @@ const Layout:FC<Props>=({ children, title })=> {
       </footer>
     </div>
   );
-}
+};
 
 export default Layout;

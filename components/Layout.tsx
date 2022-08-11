@@ -3,6 +3,7 @@ import React, { FC } from "react";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import Link from "next/link";
+import { AiFillHome } from "react-icons/ai";
 
 interface Props {
   children: React.ReactNode;
@@ -19,11 +20,16 @@ const Layout: FC<Props> = ({ children, title }) => {
       </Head>
 
       <header className="bg-slate-900 py-10 mb-10">
-        <Link href={"/"}>
-          <a>
-            <h1 className="text-6xl text-center text-amber-400">{title}</h1>
-          </a>
-        </Link>
+        <a>
+          
+          <div className="flex justify-center text-6xl text-center text-amber-400">
+          <Link href={"/"}>
+              <AiFillHome className="place-self-center mr-10" size={50} />
+          </Link>
+          <h1 className="align-bottom">{title}</h1>
+          </div>
+          
+        </a>
       </header>
 
       <main className="container mx-auto">{children}</main>

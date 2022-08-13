@@ -102,29 +102,32 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
 
   return (
     <Layout title={pokeName}>
-      <div className="flex flex-col justify-center items-center">
-        <span className="absolute text-[400px] font-bold text-slate-500">
-          #{pokeIndex}
-        </span>
-        <Image
-          src={selectedImageUrl}
-          height={400}
-          width={400}
-          alt={pokemonInfo.name}
-          placeholder={"blur"}
-          blurDataURL="/blackedPokemon.png"
-        />
-      </div>
+      <div className="flex flex-row flex-wrap">
+        <div className="flex flex-col justify-center items-center w-1/2">
+          <span className="absolute text-[300px] top-20 font-bold text-slate-500">
+            #{pokeIndex}
+          </span>
+          <Image
+            src={selectedImageUrl}
+            height={400}
+            width={400}
+            alt={pokemonInfo.name}
+            placeholder={"blur"}
+            blurDataURL="/blackedPokemon.png"
+          />
+          <div className="flex flex-row justify-center items-center gap-9">
+          {renderImages()}
+        </div>
+        </div>
 
-      <div className="flex flex-row justify-center items-center gap-9">
-        {renderImages()}
-      </div>
+        
 
-      <div className="bg-slate-900 rounded p-5">
-        <ul className="flex gap-5">{renderTypes()}</ul>
+        <div className="bg-slate-900 rounded p-5 w-1/2">
+          <ul className="flex gap-5">{renderTypes()}</ul>
 
-        <div>{renderStats()}</div>
-        <div>{renderEvolutionChain()}</div>
+          <div>{renderStats()}</div>
+          <div>{renderEvolutionChain()}</div>
+        </div>
       </div>
     </Layout>
   );

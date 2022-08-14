@@ -37,12 +37,35 @@ export async function getEvolvingChainNamesByUrl(
   return chainEntries;
 }
 
+interface ISpriteConfig {
+  version: {
+    generations : [{name:string,testnames:string[]}]
+  };
+}
+
 export function getFilteredSprites(
   pokeIndex: string,
   sprites: Record<string, string>
 ): string[] {
   // set thumbnail image urls
+  const spriteConfig:ISpriteConfig = {
+    version:{
+      generations:[
+        {name:"hello",testnames:["esf","sef"]},
+        {name:"hello",testnames:["esf","sef"]},
+      ]
+    }
+
+  };
+
+  /*versions: {
+      "generation-i": [
+        { "red-blue": ["front_default", "back_default"] },
+        { yellow: ["front_default", "back_default"] },
+      ],
+    }, */
   const spriteNames = ["front_default", "back_default"];
+  const versionNames = ["red-blue"];
 
   const initThumbnailUrls: string[] = spriteNames.map((spriteName) =>
     sprites[spriteName] ? sprites[spriteName] : ""

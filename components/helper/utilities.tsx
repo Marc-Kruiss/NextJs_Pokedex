@@ -39,31 +39,40 @@ export async function getEvolvingChainNamesByUrl(
 
 interface ISpriteConfig {
   version: {
-    generations : [{name:string,testnames:string[]}]
-  };
+    generationName: string;
+    subVersion: { subversionName: string; spriteNames: string[] }[];
+  }[];
 }
 
-export function getFilteredSprites(
-  pokeIndex: string,
-  sprites: Record<string, string>
-): string[] {
+export function getFilteredSprites(pokeIndex: string, sprites: any): string[] {
   // set thumbnail image urls
-  const spriteConfig:ISpriteConfig = {
-    version:{
-      generations:[
-        {name:"hello",testnames:["esf","sef"]},
-        {name:"hello",testnames:["esf","sef"]},
-      ]
-    }
-
+  const spriteConfig: ISpriteConfig = {
+    version: [
+      {
+        generationName: "generation-i",
+        subVersion: [
+          {
+            subversionName: "red-blue",
+            spriteNames: ["front_default", "back_default"],
+          },
+          {
+            subversionName: "yellow",
+            spriteNames: ["front_default", "back_default"],
+          },
+        ],
+      },
+      {
+        generationName: "generation-vii",
+        subVersion: [
+          {
+            subversionName: "ultra-sun-ultra-moon",
+            spriteNames: ["front_default", "front_female"],
+          },
+        ],
+      },
+    ],
   };
 
-  /*versions: {
-      "generation-i": [
-        { "red-blue": ["front_default", "back_default"] },
-        { yellow: ["front_default", "back_default"] },
-      ],
-    }, */
   const spriteNames = ["front_default", "back_default"];
   const versionNames = ["red-blue"];
 
@@ -71,8 +80,21 @@ export function getFilteredSprites(
     sprites[spriteName] ? sprites[spriteName] : ""
   );
 
+  const additionalThumbnailUrls: string[] = new Array();
+  spriteConfig.version.forEach((generation) => {
+    generation.subVersion.forEach((subVersion) => {
+      const subversionSprites =
+        sprites.versions[generation.generationName][subVersion.subversionName];
+      subVersion.spriteNames.forEach((spriteName) => {
+        subversionSprites[spriteName]
+          ? additionalThumbnailUrls.push(subversionSprites[spriteName])
+          : null;
+      });
+    });
+  });
+
   initThumbnailUrls.push(
     `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
   );
-  return initThumbnailUrls;
+  return additionalThumbnailUrls;
 }

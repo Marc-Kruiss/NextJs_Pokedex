@@ -21,14 +21,12 @@ const Layout: FC<Props> = ({ children, title }) => {
 
       <header className="bg-slate-900 py-10 mb-10">
         <a>
-          
           <div className="flex justify-center text-6xl text-center text-amber-400">
-          <Link href={"/"}>
+            <Link href={"/"}>
               <AiFillHome className="place-self-center mr-10" size={50} />
-          </Link>
-          <h1 className="align-bottom">{title}</h1>
+            </Link>
+            <h1 className="align-bottom">{title}</h1>
           </div>
-          
         </a>
       </header>
 

@@ -81,11 +81,12 @@ export function getFilteredSprites(pokeIndex: string, sprites: any): string[] {
   );
 
   // get default images
-  const spriteNames = ["front_default", "back_default"];
+  const spriteNames: string[] = ["front_default", "back_default"];
 
-  additionalThumbnailUrls = spriteNames.map((spriteName) =>
+  const defaultUrls = spriteNames.map((spriteName) =>
     sprites[spriteName] ? sprites[spriteName] : ""
   );
+  additionalThumbnailUrls.concat(defaultUrls);
 
   // get subversion images
   spriteConfig.version.forEach((generation) => {
@@ -100,8 +101,5 @@ export function getFilteredSprites(pokeIndex: string, sprites: any): string[] {
     });
   });
 
-  
-
-  
   return additionalThumbnailUrls;
 }

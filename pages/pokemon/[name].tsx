@@ -60,7 +60,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
           className="bg-slate-900 rounded px-2"
           style={{ width: `${stat.base_stat}%` }}
         >
-          {stat.base_stat}
+          {stat.stat.name.toUpperCase()} : {stat.base_stat}
         </div>
       </div>
     ));
@@ -78,24 +78,26 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
       : null;
 
   const renderImages = () => {
-    return thumbnailUrls.map((url, index) => (
-      <div
-        key={index}
-        className="bg-slate-400 bg-opacity-10 rounded-full my-8 hover:bg-opacity-50
+    return (<div className="flex flex-row flex-wrap gap-8 mt-5 justify-center">
+      {thumbnailUrls.map((url, index) => (
+        <div
+          key={index}
+          className="bg-slate-400 bg-opacity-10 rounded-full my-8 hover:bg-opacity-50
         transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300"
-      >
-        <button onClick={() => setSelectedImageUrl(url)}>
-          <Image
-            src={`${url}`}
-            height={200}
-            width={200}
-            alt={pokemonInfo.name}
-            placeholder={"blur"}
-            blurDataURL="/blackedPokemon.png"
-          />
-        </button>
-      </div>
-    ));
+        >
+          <button onClick={() => setSelectedImageUrl(url)}>
+            <Image
+              src={`${url}`}
+              height={200}
+              width={200}
+              alt={pokemonInfo.name}
+              placeholder={"blur"}
+              blurDataURL="/blackedPokemon.png"
+            />
+          </button>
+        </div>
+      ))}
+    </div>)
   };
 
   //#endregion
@@ -115,12 +117,10 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
             placeholder={"blur"}
             blurDataURL="/blackedPokemon.png"
           />
-          <div className="flex flex-row justify-center items-center gap-9">
-          {renderImages()}
+          <div>
+            {renderImages()}
+          </div>
         </div>
-        </div>
-
-        
 
         <div className="bg-slate-900 rounded p-5 w-1/2">
           <ul className="flex gap-5">{renderTypes()}</ul>

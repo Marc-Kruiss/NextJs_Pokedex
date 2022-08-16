@@ -15,7 +15,7 @@ export interface IPokemonInfo {
   name: string;
   sprites: Record<string, string>;
   types: IType[];
-  stats: { name: string; base_stat: number }[];
+  stats: { name: string; base_stat: number; stat:{name:string, url:string} }[];
   evolution_chain_url: string;
 }
 

@@ -16,6 +16,8 @@ import {
   IPokemonBase,
   IPokemonInfo,
 } from "../../components/types/PokemonInterfaces";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 
 function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   //#region Variables
@@ -29,13 +31,11 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
     pokeIndex,
     pokemonInfo.sprites
   );
-  const [selectedImageUrl, setSelectedImageUrl] = useState(
-    thumbnailUrls.slice(-1)[0]
-  );
+  const [selectedImageUrl, setSelectedImageUrl] = useState(thumbnailUrls[0]);
   //#endregion
 
   useEffect(() => {
-    setSelectedImageUrl(thumbnailUrls.slice(-1)[0]);
+    setSelectedImageUrl(thumbnailUrls[0]);
   }, [pokeIndex]);
 
   //#region Functions
@@ -78,26 +78,38 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
       : null;
 
   const renderImages = () => {
-    return (<div className="flex flex-row flex-wrap gap-8 mt-5 justify-center">
-      {thumbnailUrls.map((url, index) => (
-        <div
-          key={index}
-          className="bg-slate-400 bg-opacity-10 rounded-full my-8 hover:bg-opacity-50
-        transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300"
+    return (
+      <div>
+        <Carousel
+          emulateTouch={true}
+          showStatus={false}
+          autoPlay={true}
+          interval={2000}
+          infiniteLoop={true}
+          autoFocus={false}
+          className="m-5"
         >
-          <button onClick={() => setSelectedImageUrl(url)}>
-            <Image
-              src={`${url}`}
-              height={200}
-              width={200}
-              alt={pokemonInfo.name}
-              placeholder={"blur"}
-              blurDataURL="/blackedPokemon.png"
-            />
-          </button>
-        </div>
-      ))}
-    </div>)
+          {thumbnailUrls.map((url, index) => (
+            <div
+              key={index}
+              className="bg-slate-400 bg-opacity-10 rounded-full my-8 hover:bg-opacity-50
+                      transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300"
+            >
+              <button onClick={() => setSelectedImageUrl(url)}>
+                <Image
+                  src={`${url}`}
+                  height={200}
+                  width={200}
+                  alt={pokemonInfo.name}
+                  placeholder={"blur"}
+                  blurDataURL="/blackedPokemon.png"
+                />
+              </button>
+            </div>
+          ))}
+        </Carousel>
+      </div>
+    );
   };
 
   //#endregion
@@ -113,13 +125,12 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
             src={selectedImageUrl}
             height={400}
             width={400}
+            quality={100}
             alt={pokemonInfo.name}
             placeholder={"blur"}
             blurDataURL="/blackedPokemon.png"
           />
-          <div>
-            {renderImages()}
-          </div>
+          <div>{renderImages()}</div>
         </div>
 
         <div className="bg-slate-900 rounded p-5 w-1/2">

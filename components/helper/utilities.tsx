@@ -73,14 +73,21 @@ export function getFilteredSprites(pokeIndex: string, sprites: any): string[] {
     ],
   };
 
-  const spriteNames = ["front_default", "back_default"];
-  const versionNames = ["red-blue"];
+  let additionalThumbnailUrls: string[] = new Array();
 
-  const initThumbnailUrls: string[] = spriteNames.map((spriteName) =>
+  // get official image
+  additionalThumbnailUrls.push(
+    `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
+  );
+
+  // get default images
+  const spriteNames = ["front_default", "back_default"];
+
+  additionalThumbnailUrls = spriteNames.map((spriteName) =>
     sprites[spriteName] ? sprites[spriteName] : ""
   );
 
-  const additionalThumbnailUrls: string[] = new Array();
+  // get subversion images
   spriteConfig.version.forEach((generation) => {
     generation.subVersion.forEach((subVersion) => {
       const subversionSprites =
@@ -93,8 +100,8 @@ export function getFilteredSprites(pokeIndex: string, sprites: any): string[] {
     });
   });
 
-  initThumbnailUrls.push(
-    `https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${pokeIndex}.png`
-  );
+  
+
+  
   return additionalThumbnailUrls;
 }

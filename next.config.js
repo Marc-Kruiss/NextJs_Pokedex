@@ -3,10 +3,9 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  images:{
-    domains:['assets.pokemon.com','raw.githubusercontent.com']
+  images: {
+    domains: ["assets.pokemon.com", "raw.githubusercontent.com"],
   },
+};
 
-}
-
-module.exports = nextConfig
+module.exports = nextConfig;

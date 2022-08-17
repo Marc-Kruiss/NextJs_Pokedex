@@ -116,8 +116,12 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
 
   return (
     <Layout title={pokeName}>
-      <div className="flex flex-row flex-wrap">
-        <div className="flex flex-col justify-center items-center w-1/2">
+      <div className="flex flex-wrap
+      flex-col 
+      lg:flex-row">
+        <div className="flex flex-col justify-center items-center 
+        w-screen
+        lg:w-1/2">
           <span className="absolute text-[300px] top-20 font-bold text-slate-500">
             #{pokeIndex}
           </span>
@@ -133,7 +137,9 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
           <div>{renderImages()}</div>
         </div>
 
-        <div className="bg-slate-900 rounded p-5 w-1/2">
+        <div className="bg-slate-900 rounded p-5 
+        w-screen
+        lg:w-1/2">
           <ul className="flex gap-5">{renderTypes()}</ul>
 
           <div>{renderStats()}</div>

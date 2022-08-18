@@ -12,7 +12,7 @@ interface Props {
 
 const Layout: FC<Props> = ({ children, title }) => {
   return (
-    <div>
+    <div className="">
       <Head>
         <title>{title}</title>
         <meta name="description" content="This pokedex is powered by next.js" />
@@ -32,7 +32,7 @@ const Layout: FC<Props> = ({ children, title }) => {
 
       <main className="container mx-auto">{children}</main>
 
-      <footer className="flex justify-center items-center mt-10">
+      <footer className="flex justify-center items-center mt-10 ">
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
           target="_blank"

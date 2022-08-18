@@ -81,14 +81,15 @@ export function getFilteredSprites(pokeIndex: string, sprites: any): string[] {
   );
 
   // get default images
-  const spriteNames: string[] = ["front_default", "back_default"];
+  const spriteNames: string[] = ["front_default", "back_default","front_shiny","back_shiny"];
 
   const defaultUrls = spriteNames.map((spriteName) =>
     sprites[spriteName] ? sprites[spriteName] : ""
   );
-  additionalThumbnailUrls.concat(defaultUrls);
+  additionalThumbnailUrls=additionalThumbnailUrls.concat(defaultUrls);
 
   // get subversion images
+  /*
   spriteConfig.version.forEach((generation) => {
     generation.subVersion.forEach((subVersion) => {
       const subversionSprites =
@@ -99,7 +100,7 @@ export function getFilteredSprites(pokeIndex: string, sprites: any): string[] {
           : null;
       });
     });
-  });
+  });*/
 
   return additionalThumbnailUrls;
 }

@@ -68,7 +68,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   const renderEvolutionChain = () =>
     evolvingChainPokemons
       ? evolvingChainPokemons.map((chainEntry, index) => (
-          <div key={index}>
+          <div key={index} className="m-5">
             <Pokemon
               name={chainEntry.name}
               index={pokemonInfo.id + chainEntry.indexOffset - 1}
@@ -115,14 +115,14 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   //#endregion
 
   return (
-    <Layout title={pokeName}>
+    <div className="w-full">
+<Layout title={pokeName}>
       <div className="flex flex-wrap
       flex-col 
       lg:flex-row">
-        <div className="flex flex-col justify-center items-center 
-        w-screen
+        <div className="flex flex-col justify-center items-center  
         lg:w-1/2">
-          <span className="absolute text-[300px] top-20 font-bold text-slate-500">
+          <span className="absolute lg:text-[300px] text-[150px] top-[8rem] font-bold text-slate-500">
             #{pokeIndex}
           </span>
           <Image
@@ -137,8 +137,8 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
           <div>{renderImages()}</div>
         </div>
 
-        <div className="bg-slate-900 rounded p-5 
-        w-screen
+        <div className="bg-slate-800 rounded p-5
+        flex flex-col 
         lg:w-1/2">
           <ul className="flex gap-5">{renderTypes()}</ul>
 
@@ -147,6 +147,8 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
         </div>
       </div>
     </Layout>
+    </div>
+    
   );
 }
 

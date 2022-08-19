@@ -81,7 +81,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
     return (
       <div>
         <Carousel
-        animationHandler={"slide"}
+          animationHandler={"slide"}
           emulateTouch={true}
           showStatus={false}
           autoPlay={true}
@@ -117,39 +117,44 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
 
   return (
     <div className="w-full">
-<Layout title={pokeName}>
-      <div className="flex flex-wrap
+      <Layout title={pokeName}>
+        <div
+          className="flex flex-wrap
       flex-col 
-      lg:flex-row">
-        <div className="flex flex-col justify-center items-center  
-        lg:w-1/2">
-          <span className="absolute lg:text-[300px] text-[150px] top-[8rem] font-bold text-slate-500">
-            #{pokeIndex}
-          </span>
-          <Image
-            src={selectedImageUrl}
-            height={400}
-            width={400}
-            quality={100}
-            alt={pokemonInfo.name}
-            placeholder={"blur"}
-            blurDataURL="/blackedPokemon.png"
-          />
-          <div>{renderImages()}</div>
-        </div>
+      lg:flex-row"
+        >
+          <div
+            className="flex flex-col justify-center items-center  
+        lg:w-1/2"
+          >
+            <span className="absolute lg:text-[300px] text-[150px] top-[8rem] font-bold text-slate-500">
+              #{pokeIndex}
+            </span>
+            <Image
+              src={selectedImageUrl}
+              height={400}
+              width={400}
+              quality={100}
+              alt={pokemonInfo.name}
+              placeholder={"blur"}
+              blurDataURL="/blackedPokemon.png"
+            />
+            <div>{renderImages()}</div>
+          </div>
 
-        <div className="bg-slate-800 rounded p-5
+          <div
+            className="bg-slate-800 rounded p-5
         flex flex-col 
-        lg:w-1/2">
-          <ul className="flex gap-5">{renderTypes()}</ul>
+        lg:w-1/2"
+          >
+            <ul className="flex gap-5">{renderTypes()}</ul>
 
-          <div>{renderStats()}</div>
-          <div>{renderEvolutionChain()}</div>
+            <div>{renderStats()}</div>
+            <div>{renderEvolutionChain()}</div>
+          </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
     </div>
-    
   );
 }
 

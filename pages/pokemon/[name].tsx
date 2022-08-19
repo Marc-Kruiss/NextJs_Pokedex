@@ -63,7 +63,9 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
           className="bg-slate-900 rounded px-2"
           style={{ width: `${(stat.base_stat/maxValue)*100}%` }}
         >
+          <p className="w-max ">
           {stat.stat.name.toUpperCase()} : {stat.base_stat}
+          </p>
         </div>
       </div>
     ));

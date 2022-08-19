@@ -75,7 +75,8 @@ export default function Home({
         <AiOutlineSearch className="absolute left-7 lg:ml-[11rem] text-black size text-xl" />
         <input
           type="text"
-          className="text-gray-700 rounded-md px-16 py-2 mx-5 bg-slate-300"
+          className="text-gray-700 rounded-md px-16 py-2 mx-5 bg-slate-300
+          focus:ring-2 focus:ring-blue-500 focus:outline-none  placeholder-slate-400 ring-1 ring-slate-200 shadow-sm"
           placeholder="Search here..."
           onChange={(e) => setSearchInput(e.target.value)}
         />

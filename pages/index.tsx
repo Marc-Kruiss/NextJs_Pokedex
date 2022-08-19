@@ -72,7 +72,7 @@ export default function Home({
   return (
     <Layout title={"PokeDex"}>
       <div className="flex flex-col justify-center">
-        <AiOutlineSearch className="absolute left-7 lg:left-14 text-black size text-xl" />
+        <AiOutlineSearch className="absolute left-7 lg:ml-[11rem] text-black size text-xl" />
         <input
           type="text"
           className="text-gray-700 rounded-md px-16 py-2 mx-5 bg-slate-300"

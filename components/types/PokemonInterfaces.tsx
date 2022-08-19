@@ -37,4 +37,5 @@ export interface PokemonListResponse {
 export interface IPokemonUrl {
   name: string;
   url: string;
+  id: number;
 }

@@ -54,16 +54,21 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
     });
 
   const renderStats = () =>
-    pokemonInfo.stats.map((stat, index) => (
+  {
+    const values:number[]=pokemonInfo.stats.map(s=>s.base_stat)
+    const maxValue = Math.max(...values)
+    return pokemonInfo.stats.map((stat, index) => (
       <div key={index} className="my-2 rounded p-1 bg-slate-700">
         <div
           className="bg-slate-900 rounded px-2"
-          style={{ width: `${stat.base_stat}%` }}
+          style={{ width: `${(stat.base_stat/maxValue)*100}%` }}
         >
           {stat.stat.name.toUpperCase()} : {stat.base_stat}
         </div>
       </div>
     ));
+  }
+    
 
   const renderEvolutionChain = () =>
     evolvingChainPokemons

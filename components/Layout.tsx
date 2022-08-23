@@ -17,7 +17,7 @@ const Layout: FC<Props> = ({ children, title }) => {
   const renderLanguageDropdown = () => {
     return (
       <>
-        <div className="justify-center items-center absolute top-10 right-10">
+        <div className="flex flex-row justify-center items-center relative mx-5 mt-5">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400 text-center">
             Select language
           </label>

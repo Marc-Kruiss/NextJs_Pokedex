@@ -1,9 +1,10 @@
 import Head from "next/head";
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillHome } from "react-icons/ai";
+import { useLanguage } from "../context/Language/LanguageContext";
 
 interface Props {
   children: React.ReactNode;
@@ -11,6 +12,31 @@ interface Props {
 }
 
 const Layout: FC<Props> = ({ children, title }) => {
+  const { selectedLanguage, allLanguages } = useLanguage();
+
+  const renderLanguageDropdown = () => {
+    return (
+      <>
+        <div className="justify-center items-center absolute top-10 right-10">
+          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400 text-center">
+            Select language
+          </label>
+
+          <select
+            id="countries"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          >
+            {Object.keys(allLanguages).map((key, index) => (
+              <option key={index}>
+                {key}: {allLanguages[key].name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </>
+    );
+  };
+
   return (
     <div className="">
       <Head>
@@ -28,6 +54,7 @@ const Layout: FC<Props> = ({ children, title }) => {
             <h1 className="align-bottom">{title}</h1>
           </div>
         </a>
+        <div>{renderLanguageDropdown()}</div>
       </header>
 
       <main className="container mx-auto">{children}</main>

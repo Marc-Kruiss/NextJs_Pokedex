@@ -5,7 +5,6 @@ import { GetStaticProps } from "next";
 import { PokemonListResponse } from "../components/types/PokemonInterfaces";
 import { mapPokemonListResponse } from "../components/helper/mapper";
 import { AiOutlineSearch } from "react-icons/ai";
-import { PokeSearchApiRequest } from "../components/types/ApiInterfaces";
 
 export default function Home({
   initialPokemon,

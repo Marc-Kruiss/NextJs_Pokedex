@@ -18,6 +18,7 @@ import {
 } from "../../components/types/PokemonInterfaces";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+import Link from "next/link";
 
 function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   //#region Variables
@@ -53,24 +54,22 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
       );
     });
 
-  const renderStats = () =>
-  {
-    const values:number[]=pokemonInfo.stats.map(s=>s.base_stat)
-    const maxValue = Math.max(...values)
+  const renderStats = () => {
+    const values: number[] = pokemonInfo.stats.map((s) => s.base_stat);
+    const maxValue = Math.max(...values);
     return pokemonInfo.stats.map((stat, index) => (
       <div key={index} className="my-2 rounded p-1 bg-slate-700">
         <div
           className="bg-slate-900 rounded px-2"
-          style={{ width: `${(stat.base_stat/maxValue)*100}%` }}
+          style={{ width: `${(stat.base_stat / maxValue) * 100}%` }}
         >
           <p className="w-max ">
-          {stat.stat.name.toUpperCase()} : {stat.base_stat}
+            {stat.stat.name.toUpperCase()} : {stat.base_stat}
           </p>
         </div>
       </div>
     ));
-  }
-    
+  };
 
   const renderEvolutionChain = () =>
     evolvingChainPokemons
@@ -105,6 +104,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
             >
               <button onClick={() => setSelectedImageUrl(url)}>
                 <Image
+                  loading="eager"
                   src={`${url}`}
                   height={200}
                   width={200}

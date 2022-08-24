@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "../context/Language/LanguageContext";
 
 interface Props {
   name: string;
@@ -9,6 +10,35 @@ interface Props {
 
 function Pokemon({ name, index }: Props) {
   const pokeIndex = ("000" + (index + 1)).slice(-3);
+  const { selectedLanguage } = useLanguage();
+  const [pokemonName, setPokemonName] = useState('')
+
+
+  useEffect(() => {
+    const getCorrectLanguageName = async () => {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon-species/${name}`
+      );
+  
+      const names: {
+        defaultName: string;
+        names: { language: { name: string }; name: string }[];
+      } = await response.json().then((value) => value);
+  
+      const languageName = names.names
+        .filter((n) => n.language.name === selectedLanguage.shortTerm)
+        .at(0);
+  
+      const pokemonLanguageName= languageName ? languageName.name : names.defaultName;
+      setPokemonName(pokemonLanguageName)
+    };
+  
+    getCorrectLanguageName().catch(console.error);
+  }, [name, selectedLanguage])
+  
+
+
+
 
   return (
     <Link href={`/pokemon/${name}`}>
@@ -29,7 +59,7 @@ function Pokemon({ name, index }: Props) {
           blurDataURL="/blackedPokemon.png"
         />
         <span className="uppercase font-semibold tracking-wider text-amber-400">
-          {name}
+          {pokemonName}
         </span>
       </div>
     </Link>

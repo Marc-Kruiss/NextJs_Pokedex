@@ -1,14 +1,17 @@
 import { ReactNode, useContext, useState } from "react";
 import { createContext } from "react";
+import { createUrl, subDomains } from "../../components/helper/country";
+
 
 type languageType = {
-  name: string;
+  language: string;
+  shortTerm:string;
   imageUrl: string;
 };
 
 const availableLanguages: Record<string, languageType> = {
-  en: { name: "English", imageUrl: "unknown" },
-  ger: { name: "German", imageUrl: "unknown" },
+  en: { language: "English",shortTerm:"en", imageUrl: subDomains.GBR, },
+  ger: { language: "German",shortTerm:"de", imageUrl: subDomains.DEU },
 };
 
 type languageContextType = {

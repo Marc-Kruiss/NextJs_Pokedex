@@ -11,34 +11,31 @@ interface Props {
 function Pokemon({ name, index }: Props) {
   const pokeIndex = ("000" + (index + 1)).slice(-3);
   const { selectedLanguage } = useLanguage();
-  const [pokemonName, setPokemonName] = useState('')
-
+  const [pokemonName, setPokemonName] = useState("");
 
   useEffect(() => {
     const getCorrectLanguageName = async () => {
       const response = await fetch(
         `https://pokeapi.co/api/v2/pokemon-species/${name}`
       );
-  
+
       const names: {
         defaultName: string;
         names: { language: { name: string }; name: string }[];
       } = await response.json().then((value) => value);
-  
+
       const languageName = names.names
         .filter((n) => n.language.name === selectedLanguage.shortTerm)
         .at(0);
-  
-      const pokemonLanguageName= languageName ? languageName.name : names.defaultName;
-      setPokemonName(pokemonLanguageName)
+
+      const pokemonLanguageName = languageName
+        ? languageName.name
+        : names.defaultName;
+      setPokemonName(pokemonLanguageName);
     };
-  
+
     getCorrectLanguageName().catch(console.error);
-  }, [name, selectedLanguage])
-  
-
-
-
+  }, [name, selectedLanguage]);
 
   return (
     <Link href={`/pokemon/${name}`}>

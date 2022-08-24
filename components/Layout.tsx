@@ -18,11 +18,12 @@ const Layout: FC<Props> = ({ children, title }) => {
   const renderLanguageDropdown = () => {
     return (
       <Dropdown
-        label={
-          selectedLanguage?.shortTerm ? selectedLanguage.shortTerm : "none"
-        }
-        onChange={()=>console.log("CHANGED")}
+        label={(selectedLanguage?.shortTerm
+          ? selectedLanguage.shortTerm
+          : "none"
+        ).toUpperCase()}
       >
+        <Dropdown.Header>Select Language</Dropdown.Header>
         {Object.keys(allLanguages).map((key, index) => (
           <Dropdown.Item onClick={() => changeLanguage(key)} key={index}>
             <Image

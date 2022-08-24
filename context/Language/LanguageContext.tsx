@@ -2,16 +2,15 @@ import { ReactNode, useContext, useState } from "react";
 import { createContext } from "react";
 import { createUrl, subDomains } from "../../components/helper/country";
 
-
 type languageType = {
   language: string;
-  shortTerm:string;
+  shortTerm: string;
   imageUrl: string;
 };
 
 const availableLanguages: Record<string, languageType> = {
-  en: { language: "English",shortTerm:"en", imageUrl: subDomains.GBR, },
-  ger: { language: "German",shortTerm:"de", imageUrl: subDomains.DEU },
+  en: { language: "English", shortTerm: "en", imageUrl: subDomains.GBR },
+  ger: { language: "German", shortTerm: "de", imageUrl: subDomains.DEU },
 };
 
 type languageContextType = {
@@ -47,11 +46,9 @@ export function LanguageProvider({ children }: Props) {
     setSelectedLanguage(availableLanguages[language]);
   };
 
-
-
   const value = {
     selectedLanguage,
-    allLanguages:availableLanguages,
+    allLanguages: availableLanguages,
     changeLanguage,
   };
 

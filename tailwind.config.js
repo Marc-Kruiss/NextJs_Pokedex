@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  mode: 'jit',
+  mode: "jit",
   content: [
     "./node_modules/flowbite-react/**/*.js",
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -9,7 +9,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [
-    require("flowbite/plugin")
-  ],
-}
+  plugins: [require("flowbite/plugin")],
+};

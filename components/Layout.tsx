@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiFillHome } from "react-icons/ai";
 import { useLanguage } from "../context/Language/LanguageContext";
+import { Dropdown } from "flowbite-react";
 
 interface Props {
   children: React.ReactNode;
@@ -14,36 +15,24 @@ interface Props {
 const Layout: FC<Props> = ({ children, title }) => {
   const { selectedLanguage, allLanguages, changeLanguage } = useLanguage();
 
-  const changeLanguageOption=(e:any)=>{
-    const languageShort:string = e.target.value.split(':')[0]
-    changeLanguage(languageShort)
-  }
-
   const renderLanguageDropdown = () => {
     return (
-      <>
-        <div className="flex flex-row justify-center items-center relative mx-5 mt-5">
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400 text-center">
-            Select language
-          </label>
-
-          <select
-            id="countries"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            onChange={changeLanguageOption}
-          >
-            {Object.keys(allLanguages).map((key, index) => (
-              <option key={index} onClick={()=>changeLanguage(key)}>
-                {key}: {allLanguages[key].name}
-              </option>
-            ))}
-          </select>
-
-          <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400 text-center">
-            Selected Language: {selectedLanguage.name}
-          </label>
-        </div>
-      </>
+      <Dropdown
+        label={
+          selectedLanguage?.shortTerm ? selectedLanguage.shortTerm : "none"
+        }
+        onChange={()=>console.log("CHANGED")}
+      >
+        {Object.keys(allLanguages).map((key, index) => (
+          <Dropdown.Item onClick={() => changeLanguage(key)} key={index}>
+            <Image
+              src={allLanguages[key].imageUrl}
+              height={50}
+              width={50}
+            ></Image>
+          </Dropdown.Item>
+        ))}
+      </Dropdown>
     );
   };
 

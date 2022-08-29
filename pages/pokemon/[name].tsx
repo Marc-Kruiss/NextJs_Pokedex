@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import useSWR from "swr";
 import { mapPokemonInfo } from "../../components/helper/mapper";
 import {
@@ -19,6 +19,7 @@ import {
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import Link from "next/link";
+import PokemonLayout from "../../components/layouts/PokemonLayout";
 
 function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   //#region Variables
@@ -165,6 +166,9 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   );
 }
 
+PokemonDetail.getLayout = function getLayout(page: ReactElement) {
+  return <PokemonLayout>{page}</PokemonLayout>;
+};
 export default PokemonDetail;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

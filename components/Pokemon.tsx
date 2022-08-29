@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "../context/Language/LanguageContext";
+import { getCorrectLanguageName } from "./helper/language";
 
 interface Props {
   name: string;
@@ -14,27 +15,11 @@ function Pokemon({ name, index }: Props) {
   const [pokemonName, setPokemonName] = useState("");
 
   useEffect(() => {
-    const getCorrectLanguageName = async () => {
-      const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon-species/${name}`
-      );
-
-      const names: {
-        defaultName: string;
-        names: { language: { name: string }; name: string }[];
-      } = await response.json().then((value) => value);
-
-      const languageName = names.names
-        .filter((n) => n.language.name === selectedLanguage.shortTerm)
-        .at(0);
-
-      const pokemonLanguageName = languageName
-        ? languageName.name
-        : names.defaultName;
-      setPokemonName(pokemonLanguageName);
-    };
-
-    getCorrectLanguageName().catch(console.error);
+    getCorrectLanguageName(
+      selectedLanguage.shortTerm,
+      name,
+      setPokemonName
+    ).catch(console.error);
   }, [name, selectedLanguage]);
 
   return (

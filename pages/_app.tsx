@@ -6,6 +6,7 @@ import { PokemonListResponse } from "../components/types/PokemonInterfaces";
 import { mapPokemonListResponse } from "../components/helper/mapper";
 import { LanguageProvider } from "../context/Language/LanguageContext";
 import type { NextPage } from "next";
+import { PokemonProvider } from "../context/Pokemon/PokemonInfoContext";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -21,7 +22,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <>
       <LanguageProvider>
-        {getLayout(<Component {...pageProps} />)}
+        <PokemonProvider>
+          {getLayout(<Component {...pageProps} />)}
+        </PokemonProvider>
       </LanguageProvider>
     </>
   );

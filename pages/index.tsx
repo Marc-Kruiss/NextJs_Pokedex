@@ -5,6 +5,7 @@ import { GetStaticProps } from "next";
 import { PokemonListResponse } from "../components/types/PokemonInterfaces";
 import { mapPokemonListResponse } from "../components/helper/mapper";
 import { AiOutlineSearch } from "react-icons/ai";
+import { stringify } from "querystring";
 
 export default function Home({
   initialPokemon,
@@ -18,7 +19,7 @@ export default function Home({
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       filterPokemons(searchInput);
-    }, 1500);
+    }, 1000);
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
@@ -34,6 +35,10 @@ export default function Home({
   };
 
   const filterPokemons = async (searchTerm: string) => {
+    if (searchTerm == null || searchTerm.trim() === "") {
+      return;
+    }
+
     const response = await fetch(`/api/${searchTerm}`, {
       method: "GET",
       headers: {
@@ -53,6 +58,7 @@ export default function Home({
     setPokemon(data);
   };
 
+  /*
   const getIdByName = async (name: string) => {
     const response = await fetch(`/api/getId/${name}`, {
       method: "GET",
@@ -66,7 +72,7 @@ export default function Home({
     });
 
     return pokemonId;
-  };
+  };*/
 
   return (
     <Layout title={"PokeDex"}>

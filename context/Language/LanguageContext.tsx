@@ -8,15 +8,15 @@ type languageType = {
   imageUrl: string;
 };
 
-const availableLanguages: Record<string, languageType> = {
-  en: { language: "English", shortTerm: "en", imageUrl: subDomains.GBR },
-  ger: { language: "German", shortTerm: "de", imageUrl: subDomains.DEU },
-};
-
 type languageContextType = {
   selectedLanguage: languageType;
   allLanguages: Record<string, languageType>;
   changeLanguage: (language: string) => void;
+};
+
+const availableLanguages: Record<string, languageType> = {
+  en: { language: "English", shortTerm: "en", imageUrl: subDomains.GBR },
+  ger: { language: "German", shortTerm: "de", imageUrl: subDomains.DEU },
 };
 
 const languageContextDefaultValues: languageContextType = {

@@ -30,6 +30,7 @@ const Layout: FC<Props> = ({ children, title }) => {
               src={allLanguages[key].imageUrl}
               height={50}
               width={50}
+              alt={allLanguages[key].language}
             ></Image>
           </Dropdown.Item>
         ))}

@@ -50,7 +50,7 @@ function mapperInfo(info_respond: any): PokemonInfo {
 
 export type pokemonContextType = {
   allPokemons: PokemonType[] | undefined;
-  initAllPokemons: (setter: Function) => Promise<void>;
+  initAllPokemons: () => Promise<void>;
 };
 //#endregion
 
@@ -74,14 +74,14 @@ export async function getPokemonData(setter: Function): Promise<void> {
     )
       .then((value) => value.json)
       .then((data) => (speciesInfo = mapperSpecies(data)))
-      .catch((error) => console.log("Error species"));
+      .catch(() => console.log("Error species"));
 
     const pokemonResponse = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${searchInfo.name}`
     )
       .then((value) => value.json)
       .then((data) => (pokemonInfo = mapperInfo(data)))
-      .catch((error) => console.log("Error info"));
+      .catch(() => console.log("Error info"));
 
     const pokemon: PokemonType = {
       pokemonInfo: pokemonInfo,

@@ -18,9 +18,7 @@ export default function Home({ initialPokemon }: HomeData) {
   const [pokemon, setPokemon] = useState<PokemonListResponse>(initialPokemon);
   const [offset, setOffset] = useState(0);
 
-  const { initAllPokemons: getAllPokemons, allPokemons:fetchedPokemons } = usePokemons();
-
-  const [allPokemons, setAllPokemons] = useState();
+  const { initAllPokemons, allPokemons } = usePokemons();
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -30,13 +28,13 @@ export default function Home({ initialPokemon }: HomeData) {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
 
-  useMemo(
-    () =>
-      getAllPokemons(setAllPokemons).then(() => {
-        console.log("Loaded all Pokemons");
-      }),
-    []
-  );
+  useEffect(() => {
+    if (allPokemons === undefined) {
+      initAllPokemons().then(() => console.log("Loaded all Pokemons"));
+    } else {
+      console.log("Already laoded");
+    }
+  }, []);
 
   const fetchPokemon = async (url: string, isNext: boolean) => {
     const response = await fetch(url);
@@ -86,11 +84,7 @@ export default function Home({ initialPokemon }: HomeData) {
       </div>
 
       <div>
-        
-        <p>
-{fetchedPokemons===undefined? 'Not Loaded': 'Loaded'}
-        </p>  
-      
+        <p>{allPokemons === undefined ? "Not Loaded" : "Loaded"}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 p-5">

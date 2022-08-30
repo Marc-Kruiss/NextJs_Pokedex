@@ -72,14 +72,32 @@ export async function getPokemonData(setter: Function): Promise<void> {
     const pokemonSpeciesResponse = await fetch(
       `https://pokeapi.co/api/v2/pokemon-species/${searchInfo.name}`
     )
-      .then((value) => value.json)
+      .then((value) => {
+        if (value.ok) {
+          try {
+            value.json;
+          } catch (error) {
+            console.log("Error species json()");
+          }
+        }
+      })
       .then((data) => (speciesInfo = mapperSpecies(data)))
       .catch(() => console.log("Error species"));
 
     const pokemonResponse = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${searchInfo.name}`
     )
-      .then((value) => value.json)
+      .then((value) => {
+        if (value.ok) {
+          try {
+            value.json;
+          } catch (error) {
+            console.log("Error info json()");
+          }
+        } else {
+          console.log(value.status);
+        }
+      })
       .then((data) => (pokemonInfo = mapperInfo(data)))
       .catch(() => console.log("Error info"));
 

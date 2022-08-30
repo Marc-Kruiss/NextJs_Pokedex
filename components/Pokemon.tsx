@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useLanguage } from "../context/Language/LanguageContext";
+import { getCorrectLanguageName } from "./helper/language";
 
 interface Props {
   name: string;
@@ -9,6 +11,16 @@ interface Props {
 
 function Pokemon({ name, index }: Props) {
   const pokeIndex = ("000" + (index + 1)).slice(-3);
+  const { selectedLanguage } = useLanguage();
+  const [pokemonName, setPokemonName] = useState("");
+
+  useEffect(() => {
+    getCorrectLanguageName(
+      selectedLanguage.shortTerm,
+      name,
+      setPokemonName
+    ).catch(console.error);
+  }, [name, selectedLanguage]);
 
   return (
     <Link href={`/pokemon/${name}`}>
@@ -29,7 +41,7 @@ function Pokemon({ name, index }: Props) {
           blurDataURL="/blackedPokemon.png"
         />
         <span className="uppercase font-semibold tracking-wider text-amber-400">
-          {name}
+          {pokemonName}
         </span>
       </div>
     </Link>

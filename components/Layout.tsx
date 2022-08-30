@@ -1,9 +1,11 @@
 import Head from "next/head";
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import styles from "../styles/Home.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import { AiFillHome } from "react-icons/ai";
+import { useLanguage } from "../context/Language/LanguageContext";
+import { Dropdown } from "flowbite-react";
 
 interface Props {
   children: React.ReactNode;
@@ -11,6 +13,31 @@ interface Props {
 }
 
 const Layout: FC<Props> = ({ children, title }) => {
+  const { selectedLanguage, allLanguages, changeLanguage } = useLanguage();
+
+  const renderLanguageDropdown = () => {
+    return (
+      <Dropdown
+        label={(selectedLanguage?.shortTerm
+          ? selectedLanguage.shortTerm
+          : "none"
+        ).toUpperCase()}
+      >
+        <Dropdown.Header>Select Language</Dropdown.Header>
+        {Object.keys(allLanguages).map((key, index) => (
+          <Dropdown.Item onClick={() => changeLanguage(key)} key={index}>
+            <Image
+              src={allLanguages[key].imageUrl}
+              height={50}
+              width={50}
+              alt={allLanguages[key].language}
+            ></Image>
+          </Dropdown.Item>
+        ))}
+      </Dropdown>
+    );
+  };
+
   return (
     <div className="">
       <Head>
@@ -28,6 +55,7 @@ const Layout: FC<Props> = ({ children, title }) => {
             <h1 className="align-bottom">{title}</h1>
           </div>
         </a>
+        <div>{renderLanguageDropdown()}</div>
       </header>
 
       <main className="container mx-auto">{children}</main>

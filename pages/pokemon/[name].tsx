@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactElement } from "react";
 import useSWR from "swr";
 import { mapPokemonInfo } from "../../components/helper/mapper";
 import {
@@ -19,13 +19,20 @@ import {
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import Link from "next/link";
+import PokemonLayout from "../../components/layouts/PokemonLayout";
+import { NextRouter, useRouter } from "next/router";
+import { useLanguage } from "../../context/Language/LanguageContext";
+import { getCorrectLanguageName } from "../../components/helper/language";
 
 function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   //#region Variables
+  const { selectedLanguage } = useLanguage();
 
   let pokeIndex = ("000" + pokemonInfo.id).slice(-3).toString();
 
-  const pokeName: string =
+  const [pokemonName, setPokemonName] = useState("");
+
+  let pokeName: string =
     pokemonInfo.name[0].toUpperCase() + pokemonInfo.name.slice(1);
 
   let thumbnailUrls: string[] = getFilteredSprites(
@@ -36,8 +43,13 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   //#endregion
 
   useEffect(() => {
+    getCorrectLanguageName(
+      selectedLanguage.shortTerm,
+      pokemonInfo.name,
+      setPokemonName
+    );
     setSelectedImageUrl(thumbnailUrls[0]);
-  }, [pokeIndex]);
+  }, [pokeIndex, selectedLanguage]);
 
   //#region Functions
   const renderTypes = () =>
@@ -88,6 +100,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
       <div>
         <Carousel
           animationHandler={"slide"}
+          showThumbs={false}
           emulateTouch={true}
           showStatus={false}
           autoPlay={true}
@@ -124,7 +137,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
 
   return (
     <div className="w-full">
-      <Layout title={pokeName}>
+      <Layout title={pokemonName}>
         <div
           className="flex flex-wrap
       flex-col 
@@ -165,6 +178,18 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   );
 }
 
+PokemonDetail.getLayout = function getLayout(
+  page: ReactElement,
+  router: NextRouter
+) {
+  const { name } = router.query;
+
+  return name && !Array.isArray(name) ? (
+    <PokemonLayout pokemonName={name}>{page}</PokemonLayout>
+  ) : (
+    <div>Something went wrong</div>
+  );
+};
 export default PokemonDetail;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

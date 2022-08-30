@@ -4,24 +4,25 @@ import { createContext } from "react";
 import {
   getPokemonData,
   pokemonContextType,
+  PokemonType,
 } from "../../components/helper/pokemonContext";
 
 //#endregion
 
 //#region use effect
-const allAvailablePokemons = await getPokemonData();
 
 //#region context
+
+
 const pokemonContextDefaultValues: pokemonContextType = {
-  shownPokemon: allAvailablePokemons.slice(0, 20),
-  allPokemons: allAvailablePokemons,
-  changePokemons: (index: number) => {},
+  allPokemons:undefined,
+  initAllPokemons: (setter) => getPokemonData(setter),
 };
 
 const PokemonContext = createContext<pokemonContextType>(
   pokemonContextDefaultValues
 );
-export async function usePokemons() {
+export function usePokemons() {
   return useContext(PokemonContext);
 }
 
@@ -33,18 +34,15 @@ type Props = {
 };
 
 export function PokemonProvider({ children }: Props) {
-  const [shownPokemons, setShownPokemons] = useState(
-    allAvailablePokemons.splice(0, 20)
-  );
+  const [allPokemons, setAllPokemons] = useState<PokemonType[] | undefined>(undefined);
 
-  const changePokemons = (index:number) => {
-    setShownPokemons(allAvailablePokemons.splice(0,20));
+  const initAllPokemons = async () => {
+    await getPokemonData(setAllPokemons);
   };
 
   const value = {
-    shownPokemon: shownPokemons,
-    allPokemons: allAvailablePokemons,
-    changePokemons,
+    allPokemons:allPokemons,
+    initAllPokemons,
   };
 
   return (

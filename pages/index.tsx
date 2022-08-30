@@ -1,20 +1,26 @@
 import Layout from "../components/Layout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Pokemon from "../components/Pokemon";
 import { GetStaticProps } from "next";
 import { PokemonListResponse } from "../components/types/PokemonInterfaces";
 import { mapPokemonListResponse } from "../components/helper/mapper";
 import { AiOutlineSearch } from "react-icons/ai";
 import { stringify } from "querystring";
+import { usePokemons } from "../context/Pokemon/PokemonInfoContext";
+import { PokemonType } from "../components/helper/pokemonContext";
 
-export default function Home({
-  initialPokemon,
-}: {
+interface HomeData {
   initialPokemon: PokemonListResponse;
-}) {
+}
+
+export default function Home({ initialPokemon }: HomeData) {
   const [searchInput, setSearchInput] = useState("");
   const [pokemon, setPokemon] = useState<PokemonListResponse>(initialPokemon);
   const [offset, setOffset] = useState(0);
+
+  const { initAllPokemons: getAllPokemons, allPokemons:fetchedPokemons } = usePokemons();
+
+  const [allPokemons, setAllPokemons] = useState();
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -23,6 +29,14 @@ export default function Home({
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
+
+  useMemo(
+    () =>
+      getAllPokemons(setAllPokemons).then(() => {
+        console.log("Loaded all Pokemons");
+      }),
+    []
+  );
 
   const fetchPokemon = async (url: string, isNext: boolean) => {
     const response = await fetch(url);
@@ -58,22 +72,6 @@ export default function Home({
     setPokemon(data);
   };
 
-  /*
-  const getIdByName = async (name: string) => {
-    const response = await fetch(`/api/getId/${name}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const pokemonId = await response.json().then((data) => {
-      return data.pokemonId;
-    });
-
-    return pokemonId;
-  };*/
-
   return (
     <Layout title={"PokeDex"}>
       <div className="flex flex-col justify-center">
@@ -85,6 +83,14 @@ export default function Home({
           placeholder="Search here..."
           onChange={(e) => setSearchInput(e.target.value)}
         />
+      </div>
+
+      <div>
+        
+        <p>
+{fetchedPokemons===undefined? 'Not Loaded': 'Loaded'}
+        </p>  
+      
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 p-5">
@@ -120,6 +126,7 @@ export default function Home({
 export const getStaticProps: GetStaticProps = async (context) => {
   const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
 
+  //const allPokemons = await getAllPokemons()
   const initialPokemon: PokemonListResponse = await response
     .json()
     .then((value) => mapPokemonListResponse(value));

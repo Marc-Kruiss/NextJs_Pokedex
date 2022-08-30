@@ -21,11 +21,11 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 
   return (
     <>
-      <LanguageProvider>
-        <PokemonProvider>
+      <PokemonProvider>
+        <LanguageProvider>
           {getLayout(<Component {...pageProps} />)}
-        </PokemonProvider>
-      </LanguageProvider>
+        </LanguageProvider>
+      </PokemonProvider>
     </>
   );
 }

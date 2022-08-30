@@ -20,7 +20,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import Link from "next/link";
 import PokemonLayout from "../../components/layouts/PokemonLayout";
-import { useRouter } from "next/router";
+import { NextRouter, useRouter } from "next/router";
 import { useLanguage } from "../../context/Language/LanguageContext";
 import { getCorrectLanguageName } from "../../components/helper/language";
 
@@ -178,8 +178,10 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   );
 }
 
-PokemonDetail.getLayout = function getLayout(page: ReactElement) {
-  const router = useRouter();
+PokemonDetail.getLayout = function getLayout(
+  page: ReactElement,
+  router: NextRouter
+) {
   const { name } = router.query;
 
   return name && !Array.isArray(name) ? (

@@ -14,7 +14,7 @@ import {
 //#region context
 
 const pokemonContextDefaultValues: pokemonContextType = {
-  allPokemons: undefined,
+  allPokemons: [],
   initAllPokemons: async () => {},
 };
 
@@ -33,12 +33,10 @@ type Props = {
 };
 
 export function PokemonProvider({ children }: Props) {
-  const [allPokemons, setAllPokemons] = useState<PokemonType[] | undefined>(
-    undefined
-  );
+  const [allPokemons, setAllPokemons] = useState<PokemonType[]>([]);
 
   const initAllPokemons = async () => {
-    await getPokemonData(setAllPokemons);
+    await getPokemonData(setAllPokemons, allPokemons);
   };
 
   const value = {

@@ -17,11 +17,10 @@ export default function Home({ initialPokemon }: HomeData) {
   const [searchInput, setSearchInput] = useState("");
   const [pokemon, setPokemon] = useState<PokemonListResponse>(initialPokemon);
 
-  const [pagePokemonAmount, setPagePokemonAmount] = useState(50)
+  const [pagePokemonAmount, setPagePokemonAmount] = useState(20);
   const [offset, setOffset] = useState(0);
 
   const { initAllPokemons, allPokemons } = usePokemons();
-
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -32,10 +31,10 @@ export default function Home({ initialPokemon }: HomeData) {
   }, [searchInput]);
 
   useEffect(() => {
-    if (allPokemons === undefined) {
-      initAllPokemons().then(()=>console.log("Initialized Pokemons..."))
+    if (allPokemons.length === 0) {
+      initAllPokemons().then(() => console.log(allPokemons));
     } else {
-      console.log("Already initialized Pokemons...")
+      console.log(allPokemons);
     }
   }, []);
 
@@ -86,9 +85,9 @@ export default function Home({ initialPokemon }: HomeData) {
         />
       </div>
 
-      <div>
+      {/*<div>
         <p>{allPokemons === undefined ? "Not Loaded" : "Loaded"}</p>
-      </div>
+  </div>*/}
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 p-5">
         {/*pokemon.pokemonList.map((info, index) => (
@@ -98,22 +97,25 @@ export default function Home({ initialPokemon }: HomeData) {
             index={info.id ? info.id : offset + index}
           />
         ))*/}
-        {allPokemons !== undefined ? (
-          allPokemons.sort(x=>x.pokemonInfo!.id).slice(offset,pagePokemonAmount+offset).map((pokemon, index) => (
-            <Pokemon
-              name={pokemon.pokemonSearchInfo.name}
-              index={pokemon.pokemonInfo ? pokemon.pokemonInfo.id : 1}
-              key={index}
-            />
-          ))
+        {allPokemons.length !== 0 ? (
+          allPokemons
+            .sort((x) => x.pokemonInfo!.id)
+            .slice(offset, pagePokemonAmount + offset)
+            .map((pokemon, index) => (
+              <Pokemon
+                name={pokemon.pokemonSearchInfo.name}
+                index={pokemon.pokemonInfo ? pokemon.pokemonInfo.id : 1}
+                key={pokemon.pokemonInfo?.id}
+              />
+            ))
         ) : (
-          <p>NotFound</p>
+          <h1>Loading...</h1>
         )}
       </div>
 
       <div className="mt-10 flex justify-center gap-5">
         <button
-          disabled={offset-pagePokemonAmount<0}
+          disabled={offset - pagePokemonAmount < 0}
           className="px-3 py-1 bg-slate-900 rounded-lg disabled:bg-gray-600"
           onClick={() => fetchPokemon(false)}
         >

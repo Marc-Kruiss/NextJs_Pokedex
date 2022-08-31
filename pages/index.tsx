@@ -109,7 +109,9 @@ export default function Home({ initialPokemon }: HomeData) {
               />
             ))
         ) : (
-          <h1>Loading...</h1>
+          <h1 className="text-slate-900 text-center font-bold text-4xl">
+            Loading...
+          </h1>
         )}
       </div>
 

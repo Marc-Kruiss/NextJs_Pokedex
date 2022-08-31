@@ -29,14 +29,14 @@ function mapperSpecies(species_respond: any): PokemonSpeciesInfo {
   if (species_respond === undefined) {
     return {
       base_happiness: -1,
-      evolutionChain: undefined,
+      evolutionChain: [],
       names: [],
     };
   }
   return {
-    base_happiness: -1,
-    evolutionChain: undefined,
-    names: [],
+    base_happiness: species_respond.base_happiness,
+    evolutionChain: species_respond.evolution_chain,
+    names: species_respond.names,
   };
 }
 
@@ -49,7 +49,7 @@ function mapperInfo(info_respond: any): PokemonInfo {
 }
 
 export type pokemonContextType = {
-  allPokemons: PokemonType[] | undefined;
+  allPokemons: PokemonType[];
   initAllPokemons: () => Promise<void>;
 };
 //#endregion
@@ -65,48 +65,45 @@ export async function getPokemonData(setter: Function): Promise<void> {
       return data.results;
     });
 
-  pokemonSearchInfos.map(async (searchInfo) => {
-    let speciesInfo: PokemonSpeciesInfo | undefined = undefined;
-    let pokemonInfo: PokemonInfo | undefined = undefined;
-
-    const pokemonSpeciesResponse = await fetch(
-      `https://pokeapi.co/api/v2/pokemon-species/${searchInfo.name}`
+  const pokemonMappingData = await Promise.all(pokemonSearchInfos.map(async (searchInfo) => {
+    const speciesInfo: PokemonSpeciesInfo | void = await fetch(
+      `https://pokeapi.co/api/v2/pokemon-species/${searchInfo.name}/`
     )
-      .then((value) => {
-        if (value.ok) {
-          try {
-            value.json;
-          } catch (error) {
-            console.log("Error species json()");
-          }
-        }
-      })
-      .then((data) => (speciesInfo = mapperSpecies(data)))
+      .then((value) => value.json())
+      .then((data) => mapperSpecies(data))
       .catch(() => console.log("Error species"));
 
-    const pokemonResponse = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${searchInfo.name}`
+    const pokemonInfo: PokemonInfo | void = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${searchInfo.name}/`
     )
-      .then((value) => {
-        if (value.ok) {
-          try {
-            value.json;
-          } catch (error) {
-            console.log("Error info json()");
-          }
-        } else {
-          console.log(value.status);
-        }
-      })
-      .then((data) => (pokemonInfo = mapperInfo(data)))
+      .then((value) => value.json())
+      .then((data) => mapperInfo(data))
       .catch(() => console.log("Error info"));
 
     const pokemon: PokemonType = {
-      pokemonInfo: pokemonInfo,
+      pokemonInfo: pokemonInfo ? pokemonInfo : undefined,
       pokemonSearchInfo: searchInfo,
-      pokemonSpeciesInfo: speciesInfo,
+      pokemonSpeciesInfo: speciesInfo ? speciesInfo : undefined,
     };
-    pokemonInfoCollection.push(pokemon);
-  });
+    console.log("Pokemon:");
+    console.log(pokemon);
+    if (
+      pokemon.pokemonInfo !== undefined &&
+      pokemon.pokemonSearchInfo !== undefined &&
+      pokemon.pokemonSpeciesInfo !== undefined
+    ) {
+      return pokemon
+      pokemonInfoCollection.push(pokemon);
+    }
+    else{
+      return undefined
+    }
+  }));
+
+  pokemonMappingData.map((pokemon)=>{
+    if(pokemon!==undefined){
+      pokemonInfoCollection.push(pokemon)
+    }
+  })
   setter(pokemonInfoCollection);
 }

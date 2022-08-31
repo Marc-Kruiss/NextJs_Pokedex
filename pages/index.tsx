@@ -16,9 +16,12 @@ interface HomeData {
 export default function Home({ initialPokemon }: HomeData) {
   const [searchInput, setSearchInput] = useState("");
   const [pokemon, setPokemon] = useState<PokemonListResponse>(initialPokemon);
+
+  const [pagePokemonAmount, setPagePokemonAmount] = useState(50)
   const [offset, setOffset] = useState(0);
 
   const { initAllPokemons, allPokemons } = usePokemons();
+
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -30,20 +33,20 @@ export default function Home({ initialPokemon }: HomeData) {
 
   useEffect(() => {
     if (allPokemons === undefined) {
-      initAllPokemons().then(() => console.log("Loaded all Pokemons"));
+      initAllPokemons().then(()=>console.log("Initialized Pokemons..."))
     } else {
-      console.log("Already laoded");
+      console.log("Already initialized Pokemons...")
     }
   }, []);
 
-  const fetchPokemon = async (url: string, isNext: boolean) => {
-    const response = await fetch(url);
+  const fetchPokemon = async (isNext: boolean) => {
+    /*const response = await fetch(url);
     const nextPokemon: PokemonListResponse = await response
       .json()
-      .then((value) => mapPokemonListResponse(value));
+      .then((value) => mapPokemonListResponse(value));*/
 
-    setOffset(isNext ? offset + 20 : offset - 20);
-    setPokemon(nextPokemon);
+    setOffset(isNext ? offset + pagePokemonAmount : offset - pagePokemonAmount);
+    //setPokemon(nextPokemon);
   };
 
   const filterPokemons = async (searchTerm: string) => {
@@ -88,27 +91,38 @@ export default function Home({ initialPokemon }: HomeData) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 p-5">
-        {pokemon.pokemonList.map((info, index) => (
+        {/*pokemon.pokemonList.map((info, index) => (
           <Pokemon
             name={info.name}
             key={index}
             index={info.id ? info.id : offset + index}
           />
-        ))}
+        ))*/}
+        {allPokemons !== undefined ? (
+          allPokemons.sort(x=>x.pokemonInfo!.id).slice(offset,pagePokemonAmount+offset).map((pokemon, index) => (
+            <Pokemon
+              name={pokemon.pokemonSearchInfo.name}
+              index={pokemon.pokemonInfo ? pokemon.pokemonInfo.id : 1}
+              key={index}
+            />
+          ))
+        ) : (
+          <p>NotFound</p>
+        )}
       </div>
 
       <div className="mt-10 flex justify-center gap-5">
         <button
-          disabled={!pokemon.previousUrl}
+          disabled={offset-pagePokemonAmount<0}
           className="px-3 py-1 bg-slate-900 rounded-lg disabled:bg-gray-600"
-          onClick={() => fetchPokemon(pokemon.previousUrl, false)}
+          onClick={() => fetchPokemon(false)}
         >
           prev
         </button>
         <button
-          disabled={!pokemon.nextUrl}
+          disabled={false}
           className="px-3 py-1 bg-slate-900 rounded-lg disabled:bg-gray-600"
-          onClick={() => fetchPokemon(pokemon.nextUrl, true)}
+          onClick={() => fetchPokemon(true)}
         >
           next
         </button>

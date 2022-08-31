@@ -10,7 +10,7 @@ interface Props {
 }
 
 function Pokemon({ name, index }: Props) {
-  const pokeIndex = ("000" + (index + 1)).slice(-3);
+  const pokeIndex = ("000" + index).slice(-3);
   const { selectedLanguage } = useLanguage();
   const [pokemonName, setPokemonName] = useState("");
 
@@ -37,6 +37,7 @@ function Pokemon({ name, index }: Props) {
           height={150}
           width={150}
           alt={name}
+          loading="lazy"
           placeholder={"blur"}
           blurDataURL="/blackedPokemon.png"
         />

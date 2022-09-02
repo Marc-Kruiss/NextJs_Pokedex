@@ -23,17 +23,17 @@ import PokemonLayout from "../../components/layouts/PokemonLayout";
 import { NextRouter, useRouter } from "next/router";
 import { useLanguage } from "../../context/Language/LanguageContext";
 import { getCorrectLanguageName } from "../../components/helper/language";
+import { usePokemonInfo } from "../../context/Pokemon/PokemonInfoContext";
 
-function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
+function PokemonDetail({ pokemonInfo }: IPokemonBase) {
   //#region Variables
   const { selectedLanguage } = useLanguage();
+
+  const { initPokemonInfo, pokemonData } = usePokemonInfo();
 
   let pokeIndex = ("000" + pokemonInfo.id).slice(-3).toString();
 
   const [pokemonName, setPokemonName] = useState("");
-
-  let pokeName: string =
-    pokemonInfo.name[0].toUpperCase() + pokemonInfo.name.slice(1);
 
   let thumbnailUrls: string[] = getFilteredSprites(
     pokeIndex,
@@ -50,6 +50,15 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
     );
     setSelectedImageUrl(thumbnailUrls[0]);
   }, [pokeIndex, selectedLanguage]);
+
+  useEffect(() => {
+    if (pokemonData === null) {
+      console.log("Loading...");
+      initPokemonInfo(pokemonInfo.id);
+    } else {
+      console.log("Already loaded");
+    }
+  }, []);
 
   //#region Functions
   const renderTypes = () =>
@@ -84,12 +93,12 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
   };
 
   const renderEvolutionChain = () =>
-    evolvingChainPokemons
-      ? evolvingChainPokemons.map((chainEntry, index) => (
+    pokemonData?.evolvingChain
+      ? pokemonData.evolvingChain.map((chainEntry, index) => (
           <div key={index} className="m-5">
             <Pokemon
               name={chainEntry.name}
-              index={pokemonInfo.id + chainEntry.indexOffset - 1}
+              index={pokemonInfo.id + chainEntry.indexOffset}
             />
           </div>
         ))
@@ -135,7 +144,7 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
 
   //#endregion
 
-  return (
+  return pokemonData ? (
     <div className="w-full">
       <Layout title={pokemonName}>
         <div
@@ -175,6 +184,10 @@ function PokemonDetail({ pokemonInfo, evolvingChainPokemons }: IPokemonBase) {
         </div>
       </Layout>
     </div>
+  ) : (
+    <div>
+      <h1>Loading Data..</h1>
+    </div>
   );
 }
 
@@ -211,6 +224,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       pokemonInfo.evolution_chain_url,
       pokemon_json.name
     );
+    console.log(evolvingChainPokemons);
 
     return {
       props: {

@@ -17,10 +17,10 @@ export default function Home({ initialPokemon }: HomeData) {
   const [searchInput, setSearchInput] = useState("");
   const [pokemon, setPokemon] = useState<PokemonListResponse>(initialPokemon);
 
-  const [pagePokemonAmount, setPagePokemonAmount] = useState(20);
+  //const [pagePokemonAmount, setPagePokemonAmount] = useState(20);
   const [offset, setOffset] = useState(0);
 
-  const { initAllPokemons, allPokemons } = usePokemons();
+  //const { initAllPokemons, allPokemons } = usePokemons();
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -30,22 +30,22 @@ export default function Home({ initialPokemon }: HomeData) {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (allPokemons.length === 0) {
       initAllPokemons().then(() => console.log(allPokemons));
     } else {
       console.log(allPokemons);
     }
-  }, []);
+  }, []);*/
 
-  const fetchPokemon = async (isNext: boolean) => {
-    /*const response = await fetch(url);
+  const fetchPokemon = async (url:string,isNext: boolean) => {
+    const response = await fetch(url);
     const nextPokemon: PokemonListResponse = await response
       .json()
-      .then((value) => mapPokemonListResponse(value));*/
+      .then((value) => mapPokemonListResponse(value));
 
-    setOffset(isNext ? offset + pagePokemonAmount : offset - pagePokemonAmount);
-    //setPokemon(nextPokemon);
+    setOffset(isNext ? offset + 20 : offset - 20);
+    setPokemon(nextPokemon);
   };
 
   const filterPokemons = async (searchTerm: string) => {
@@ -85,19 +85,18 @@ export default function Home({ initialPokemon }: HomeData) {
         />
       </div>
 
-      {/*<div>
-        <p>{allPokemons === undefined ? "Not Loaded" : "Loaded"}</p>
-  </div>*/}
-
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 p-5">
-        {/*pokemon.pokemonList.map((info, index) => (
-          <Pokemon
+        
+        {pokemon.pokemonList.map((info, index) => (
+          <div>
+            <Pokemon
             name={info.name}
             key={index}
-            index={info.id ? info.id : offset + index}
+            index={index+1+offset}
           />
-        ))*/}
-        {allPokemons.length !== 0 ? (
+            </div>
+        ))}
+        {/*allPokemons.length !== 0 ? (
           allPokemons
             .sort((x) => x.pokemonInfo!.id)
             .slice(offset, pagePokemonAmount + offset)
@@ -112,21 +111,21 @@ export default function Home({ initialPokemon }: HomeData) {
           <h1 className="text-slate-900 text-center font-bold text-4xl">
             Loading...
           </h1>
-        )}
+        )*/}
       </div>
 
       <div className="mt-10 flex justify-center gap-5">
         <button
-          disabled={offset - pagePokemonAmount < 0}
+          disabled={pokemon.previousUrl===null}
           className="px-3 py-1 bg-slate-900 rounded-lg disabled:bg-gray-600"
-          onClick={() => fetchPokemon(false)}
+          onClick={() => fetchPokemon(pokemon.previousUrl,false)}
         >
           prev
         </button>
         <button
-          disabled={false}
+          disabled={pokemon.nextUrl===null}
           className="px-3 py-1 bg-slate-900 rounded-lg disabled:bg-gray-600"
-          onClick={() => fetchPokemon(true)}
+          onClick={() => fetchPokemon(pokemon.nextUrl,true)}
         >
           next
         </button>

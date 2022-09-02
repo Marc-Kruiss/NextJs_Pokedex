@@ -14,14 +14,14 @@ import {
 //#region context
 
 const pokemonContextDefaultValues: pokemonContextType = {
-  allPokemons: [],
-  initAllPokemons: async () => {},
+  pokemonData:null,
+  initPokemonInfo: async () => {},
 };
 
 const PokemonContext = createContext<pokemonContextType>(
   pokemonContextDefaultValues
 );
-export function usePokemons() {
+export function usePokemonInfo() {
   return useContext(PokemonContext);
 }
 
@@ -33,15 +33,15 @@ type Props = {
 };
 
 export function PokemonProvider({ children }: Props) {
-  const [allPokemons, setAllPokemons] = useState<PokemonType[]>([]);
+  const [currentPokemonInfo, setCurrentPokemonInfo] = useState<PokemonType|null>(null)
 
-  const initAllPokemons = async () => {
-    await getPokemonData(setAllPokemons, allPokemons);
+  const initAllPokemons = async (setter:Function,pokeIndex:number) => {
+    await getPokemonData(setter, pokeIndex);
   };
 
-  const value = {
-    allPokemons: allPokemons,
-    initAllPokemons,
+  const value:pokemonContextType = {
+    pokemonData:currentPokemonInfo,
+    initPokemonInfo:(id)=> initAllPokemons(setCurrentPokemonInfo,id),
   };
 
   return (

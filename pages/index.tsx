@@ -6,7 +6,7 @@ import { PokemonListResponse } from "../components/types/PokemonInterfaces";
 import { mapPokemonListResponse } from "../components/helper/mapper";
 import { AiOutlineSearch } from "react-icons/ai";
 import { stringify } from "querystring";
-import { usePokemons } from "../context/Pokemon/PokemonInfoContext";
+import { usePokemonInfo } from "../context/Pokemon/PokemonInfoContext";
 import { PokemonType } from "../components/helper/pokemonContext";
 
 interface HomeData {
@@ -96,22 +96,7 @@ export default function Home({ initialPokemon }: HomeData) {
           />
             </div>
         ))}
-        {/*allPokemons.length !== 0 ? (
-          allPokemons
-            .sort((x) => x.pokemonInfo!.id)
-            .slice(offset, pagePokemonAmount + offset)
-            .map((pokemon, index) => (
-              <Pokemon
-                name={pokemon.pokemonSearchInfo.name}
-                index={pokemon.pokemonInfo ? pokemon.pokemonInfo.id : 1}
-                key={pokemon.pokemonInfo?.id}
-              />
-            ))
-        ) : (
-          <h1 className="text-slate-900 text-center font-bold text-4xl">
-            Loading...
-          </h1>
-        )*/}
+        
       </div>
 
       <div className="mt-10 flex justify-center gap-5">

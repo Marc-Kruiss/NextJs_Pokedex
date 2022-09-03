@@ -88,10 +88,9 @@ export default function Home({ initialPokemon }: HomeData) {
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 p-5">
         
         {pokemon.pokemonList.map((info, index) => (
-          <div>
+          <div key={index}>
             <Pokemon
             name={info.name}
-            key={index}
             index={index+1+offset}
           />
             </div>

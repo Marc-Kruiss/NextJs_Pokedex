@@ -12,39 +12,39 @@ import { RiUser5Line, RiUser5Fill } from "react-icons/ri";
 
 export default function PokemonLayout({
   children,
-  pokemonName,
+  index,
 }: {
   children: React.ReactNode;
-  pokemonName: string;
+  index: number;
 }) {
-  console.log("-->", pokemonName);
+  console.log("-->", index);
   return (
     <>
       {children}
-      <BottomNav name={pokemonName} />
+      <BottomNav index={index} />
     </>
   );
 }
 
-const BottomNav = ({ name }: { name: string }) => {
+const BottomNav = ({ index }: { index: number }) => {
   const router = useRouter();
-  const [activeTabs, setActiveTabs] = useState(name);
+  const [activeTabs, setActiveTabs] = useState("home");
   useEffect(() => {
     switch (activeTabs) {
       case "home":
-        router.push(`./${name}`);
+        router.push(`./${index}`);
         break;
       case "search":
-        router.push(`./${name}/evolutions`);
+        router.push(`./${index}/evolutions`);
         break;
       case "saved":
-        router.push(`./${name}/types`);
+        router.push(`./${index}/types`);
         break;
       case "account":
-        router.push(`./${name},/moves`);
+        router.push(`./${index}/moves`);
         break;
       default:
-        router.push(`./${name}`);
+        router.push(`./${index}`);
         break;
     }
   }, [activeTabs]);

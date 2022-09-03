@@ -25,44 +25,84 @@ import { useLanguage } from "../../context/Language/LanguageContext";
 import { getCorrectLanguageName } from "../../components/helper/language";
 import { usePokemonInfo } from "../../context/Pokemon/PokemonInfoContext";
 
-function PokemonDetail({ pokemonInfo }: IPokemonBase) {
+interface PokeId {
+  id: number;
+}
+
+function PokemonDetail({ id }: PokeId) {
   //#region Variables
   const { selectedLanguage } = useLanguage();
 
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
 
-  let pokeIndex = ("000" + pokemonInfo.id).slice(-3).toString();
+  let pokeIndex = ("000" + id).slice(-3).toString();
 
   const [pokemonName, setPokemonName] = useState("");
 
-  let thumbnailUrls: string[] = getFilteredSprites(
-    pokeIndex,
-    pokemonInfo.sprites
-  );
-  const [selectedImageUrl, setSelectedImageUrl] = useState(thumbnailUrls[0]);
+  let thumbnailUrls: string[] = [];
+  const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState<number>(0);
+
+  const displayName = () => {
+    let result = "";
+    if (pokemonData !== null) {
+      console.log(pokemonData.pokemonSpeciesInfo?.names);
+      console.log(selectedLanguage);
+      const languageName = pokemonData.pokemonSpeciesInfo?.names.filter(
+        (languageName) => (
+          languageName.language.name.toLowerCase() ===
+            selectedLanguage.shortTerm.toLowerCase()
+        )
+      ).at(0)
+      console.log("RESULT");
+      console.log(languageName);
+      if (languageName !== undefined) {
+        result = languageName.name;
+      } else {
+        result = pokemonData.pokemonSpeciesInfo!.name;
+      }
+    } else {
+      result = "";
+    }
+    console.log(result);
+    return result;
+  };
+
+  //const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState(0);
   //#endregion
 
   useEffect(() => {
-    getCorrectLanguageName(
-      selectedLanguage.shortTerm,
-      pokemonInfo.name,
-      setPokemonName
-    );
-    setSelectedImageUrl(thumbnailUrls[0]);
-  }, [pokeIndex, selectedLanguage]);
+    const initComponents = async () => {
+      if (pokemonData === null) {
+        await initPokemonInfo(id);
+      }
+
+      if (pokemonData !== null && pokemonData.pokemonInfo?.id !== id) {
+        await initPokemonInfo(id);
+        getCorrectLanguageName(
+          selectedLanguage.shortTerm,
+          pokemonData.pokemonSpeciesInfo!.name,
+          setPokemonName
+        );
+        thumbnailUrls = pokemonData.pokemonInfo!.sprites;
+      } else {
+      }
+    };
+    initComponents();
+  }, [id]);
 
   useEffect(() => {
-    if (pokemonData === null) {
-      console.log("Loading...");
-      initPokemonInfo(pokemonInfo.id);
-    } else {
-      console.log("Already loaded");
+    if (pokemonData !== null) {
+      getCorrectLanguageName(
+        selectedLanguage.shortTerm,
+        pokemonData.pokemonSpeciesInfo!.name,
+        setPokemonName
+      );
     }
-  }, []);
+  }, [selectedLanguage]);
 
   //#region Functions
   const renderTypes = () =>
-    pokemonInfo.types.map((type, index) => {
+    pokemonData?.pokemonInfo?.types.map((type, index) => {
       const color = getTypeColor(type.type.name);
       return (
         <li
@@ -76,9 +116,11 @@ function PokemonDetail({ pokemonInfo }: IPokemonBase) {
     });
 
   const renderStats = () => {
-    const values: number[] = pokemonInfo.stats.map((s) => s.base_stat);
+    const values: number[] = pokemonData!.pokemonInfo!.stats.map(
+      (s) => s.base_stat
+    );
     const maxValue = Math.max(...values);
-    return pokemonInfo.stats.map((stat, index) => (
+    return pokemonData!.pokemonInfo!.stats.map((stat, index) => (
       <div key={index} className="my-2 rounded p-1 bg-slate-700">
         <div
           className="bg-slate-900 rounded px-2"
@@ -98,7 +140,7 @@ function PokemonDetail({ pokemonInfo }: IPokemonBase) {
           <div key={index} className="m-5">
             <Pokemon
               name={chainEntry.name}
-              index={pokemonInfo.id + chainEntry.indexOffset}
+              index={pokemonData!.pokemonInfo!.id + chainEntry.indexOffset}
             />
           </div>
         ))
@@ -118,19 +160,19 @@ function PokemonDetail({ pokemonInfo }: IPokemonBase) {
           autoFocus={false}
           className="m-5"
         >
-          {thumbnailUrls.map((url, index) => (
+          {pokemonData?.pokemonInfo?.sprites.map((url, index) => (
             <div
               key={index}
               className="bg-slate-400 bg-opacity-10 rounded-sm my-8 hover:bg-opacity-50
                       transition ease-in-out delay-100 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300"
             >
-              <button onClick={() => setSelectedImageUrl(url)}>
+              <button onClick={() => setSelectedImageUrlIndex(index)}>
                 <Image
                   loading="eager"
                   src={`${url}`}
                   height={200}
                   width={200}
-                  alt={pokemonInfo.name}
+                  alt={pokemonData!.pokemonSpeciesInfo!.name}
                   placeholder={"blur"}
                   blurDataURL="/blackedPokemon.png"
                 />
@@ -146,7 +188,7 @@ function PokemonDetail({ pokemonInfo }: IPokemonBase) {
 
   return pokemonData ? (
     <div className="w-full">
-      <Layout title={pokemonName}>
+      <Layout title={displayName()}>
         <div
           className="flex flex-wrap
       flex-col 
@@ -160,11 +202,15 @@ function PokemonDetail({ pokemonInfo }: IPokemonBase) {
               #{pokeIndex}
             </span>
             <Image
-              src={selectedImageUrl}
+              src={
+                pokemonData.pokemonInfo?.sprites[selectedImageUrlIndex]
+                  ? pokemonData.pokemonInfo?.sprites[selectedImageUrlIndex]
+                  : ""
+              }
               height={400}
               width={400}
               quality={100}
-              alt={pokemonInfo.name}
+              alt={pokemonData!.pokemonSpeciesInfo!.name}
               placeholder={"blur"}
               blurDataURL="/blackedPokemon.png"
             />
@@ -195,10 +241,10 @@ PokemonDetail.getLayout = function getLayout(
   page: ReactElement,
   router: NextRouter
 ) {
-  const { name } = router.query;
+  const { pokeId } = router.query;
 
-  return name && !Array.isArray(name) ? (
-    <PokemonLayout pokemonName={name}>{page}</PokemonLayout>
+  return pokeId && !Array.isArray(pokeId) ? (
+    <PokemonLayout index={Number(pokeId)}>{page}</PokemonLayout>
   ) : (
     <div>Something went wrong</div>
   );
@@ -207,7 +253,8 @@ export default PokemonDetail;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
-    const poke_response = await fetch(
+    const id = context.query.pokeId;
+    /*const poke_response = await fetch(
       `https://pokeapi.co/api/v2/pokemon/${context.query.name}`
     );
     const pokemon_json = await poke_response.json();
@@ -224,12 +271,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       pokemonInfo.evolution_chain_url,
       pokemon_json.name
     );
-    console.log(evolvingChainPokemons);
+    console.log(evolvingChainPokemons);*/
 
     return {
       props: {
-        pokemonInfo,
-        evolvingChainPokemons,
+        id,
       },
     };
   } catch (error) {

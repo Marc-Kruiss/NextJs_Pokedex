@@ -23,7 +23,7 @@ function Pokemon({ name, index }: Props) {
   }, [name, selectedLanguage]);
 
   return (
-    <Link href={`/pokemon/${name}`}>
+    <Link href={`/pokemon/${index}`}>
       <div
         className="bg-slate-900 rounded p-5 flex flex-col justify-center items-center relative shadow-md
       transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 hover:bg-slate-800 duration-300"

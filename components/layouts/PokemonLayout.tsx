@@ -20,32 +20,32 @@ export default function PokemonLayout({
   return (
     <>
       {children}
-      <BottomNav index={index} />
+      <BottomNav/>
     </>
   );
 }
 
-const BottomNav = ({ index }: { index: number }) => {
+const BottomNav = () => {
   const router = useRouter();
   console.log("Current Route")
-  console.log(router.asPath)
+  const pokeId = router.query.pokeId
   const [activeTabs, setActiveTabs] = useState("home");
   useEffect(() => {
     switch (activeTabs) {
       case "home":
-        router.push(`./${index}`);
+        router.push(`./${pokeId}`);
         break;
       case "search":
-        router.push(`./${index}/evolutions`);
+        router.push(`./${pokeId}/evolutions`);
         break;
       case "saved":
-        router.push(`./${index}/types`);
+        router.push(`./${pokeId}/types`);
         break;
       case "account":
-        router.push(`./${index}/moves`);
+        router.push(`./${pokeId}/moves`);
         break;
       default:
-        router.push(`./${index}`);
+        router.push(`./${pokeId}`);
         break;
     }
   }, [activeTabs]);

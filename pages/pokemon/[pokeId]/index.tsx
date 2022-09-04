@@ -2,28 +2,28 @@ import { GetServerSideProps } from "next";
 import Image from "next/image";
 import React, { useState, useEffect, ReactElement } from "react";
 import useSWR from "swr";
-import { mapPokemonInfo } from "../../components/helper/mapper";
+import { mapPokemonInfo } from "../../../components/helper/mapper";
 import {
   getEvolvingChainNamesByUrl,
   getFilteredSprites,
   numberToThreeBasedString,
-} from "../../components/helper/utilities";
-import Layout from "../../components/Layout";
-import Pokemon from "../../components/Pokemon";
-import { getTypeColor } from "../../components/TypeColor";
+} from "../../../components/helper/utilities";
+import Layout from "../../../components/Layout";
+import Pokemon from "../../../components/Pokemon";
+import { getTypeColor } from "../../../components/TypeColor";
 import {
   IChainEntry,
   IPokemonBase,
   IPokemonInfo,
-} from "../../components/types/PokemonInterfaces";
+} from "../../../components/types/PokemonInterfaces";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import Link from "next/link";
-import PokemonLayout from "../../components/layouts/PokemonLayout";
+import PokemonLayout from "../../../components/layouts/PokemonLayout";
 import { NextRouter, useRouter } from "next/router";
-import { useLanguage } from "../../context/Language/LanguageContext";
-import { getCorrectLanguageName } from "../../components/helper/language";
-import { usePokemonInfo } from "../../context/Pokemon/PokemonInfoContext";
+import { useLanguage } from "../../../context/Language/LanguageContext";
+import { getCorrectLanguageName } from "../../../components/helper/language";
+import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
 
 interface PokeId {
   id: number;
@@ -43,28 +43,21 @@ function PokemonDetail({ id }: PokeId) {
   const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState<number>(0);
 
   const displayName = () => {
-    let result = "";
     if (pokemonData !== null) {
-      console.log(pokemonData.pokemonSpeciesInfo?.names);
-      console.log(selectedLanguage);
       const languageName = pokemonData.pokemonSpeciesInfo?.names.filter(
         (languageName) => (
           languageName.language.name.toLowerCase() ===
             selectedLanguage.shortTerm.toLowerCase()
         )
       ).at(0)
-      console.log("RESULT");
-      console.log(languageName);
       if (languageName !== undefined) {
-        result = languageName.name;
+        return languageName.name;
       } else {
-        result = pokemonData.pokemonSpeciesInfo!.name;
+        return pokemonData.pokemonSpeciesInfo!.name;
       }
     } else {
-      result = "";
+      return "";
     }
-    console.log(result);
-    return result;
   };
 
   //const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState(0);

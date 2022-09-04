@@ -22,8 +22,8 @@ import Link from "next/link";
 import PokemonLayout from "../../../components/layouts/PokemonLayout";
 import { NextRouter, useRouter } from "next/router";
 import { useLanguage } from "../../../context/Language/LanguageContext";
-import { getCorrectLanguageName } from "../../../components/helper/language";
 import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
+import { GetPokemonLanguageName } from "../../../components/helper/language";
 
 interface PokeId {
   id: number;
@@ -37,29 +37,10 @@ function PokemonDetail({ id }: PokeId) {
 
   let pokeIndex = ("000" + id).slice(-3).toString();
 
-  const [pokemonName, setPokemonName] = useState("");
-
   let thumbnailUrls: string[] = [];
   const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState<number>(0);
 
-  const displayName = () => {
-    if (pokemonData !== null) {
-      const languageName = pokemonData.pokemonSpeciesInfo?.names
-        .filter(
-          (languageName) =>
-            languageName.language.name.toLowerCase() ===
-            selectedLanguage.shortTerm.toLowerCase()
-        )
-        .at(0);
-      if (languageName !== undefined) {
-        return languageName.name;
-      } else {
-        return pokemonData.pokemonSpeciesInfo!.name;
-      }
-    } else {
-      return "";
-    }
-  };
+  
 
   //const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState(0);
   //#endregion
@@ -72,27 +53,12 @@ function PokemonDetail({ id }: PokeId) {
 
       if (pokemonData !== null && pokemonData.pokemonInfo?.id !== id) {
         await initPokemonInfo(id);
-        getCorrectLanguageName(
-          selectedLanguage.shortTerm,
-          pokemonData.pokemonSpeciesInfo!.name,
-          setPokemonName
-        );
         thumbnailUrls = pokemonData.pokemonInfo!.sprites;
       } else {
       }
     };
     initComponents();
   }, [id]);
-
-  useEffect(() => {
-    if (pokemonData !== null) {
-      getCorrectLanguageName(
-        selectedLanguage.shortTerm,
-        pokemonData.pokemonSpeciesInfo!.name,
-        setPokemonName
-      );
-    }
-  }, [selectedLanguage]);
 
   //#region Functions
   const renderTypes = () =>
@@ -182,7 +148,7 @@ function PokemonDetail({ id }: PokeId) {
 
   return pokemonData ? (
     <div className="w-full">
-      <Layout title={displayName()}>
+      <Layout title={GetPokemonLanguageName()}>
         <div
           className="flex flex-wrap
       flex-col 
@@ -269,3 +235,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
+

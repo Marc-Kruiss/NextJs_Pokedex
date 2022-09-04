@@ -1,3 +1,6 @@
+import { useLanguage } from "../../context/Language/LanguageContext";
+import { usePokemonInfo } from "../../context/Pokemon/PokemonInfoContext";
+
 export const getCorrectLanguageName = async (
   currentLanguageShortTerm: string,
   defaultPokemonName: string,
@@ -20,4 +23,27 @@ export const getCorrectLanguageName = async (
     ? languageName.name
     : names.defaultName;
   setValueMethod(pokemonLanguageName);
+};
+
+
+export const GetPokemonLanguageName = () => {
+  const {pokemonData} = usePokemonInfo()
+  const {selectedLanguage} = useLanguage()
+  console.log("Calculate Name")
+  if (pokemonData !== null) {
+    const languageName = pokemonData.pokemonSpeciesInfo?.names
+      .filter(
+        (languageName) =>
+          languageName.language.name.toLowerCase() ===
+          selectedLanguage.shortTerm.toLowerCase()
+      )
+      .at(0);
+    if (languageName !== undefined) {
+      return languageName.name;
+    } else {
+      return pokemonData.pokemonSpeciesInfo!.name;
+    }
+  } else {
+    return "";
+  }
 };

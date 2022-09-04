@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { ReactElement } from "react";
+import PokemonLayout from "../../../components/layouts/PokemonLayout";
 
 function Evolutions() {
-  return (
-    <div>Evolutions</div>
-  )
+  return <div>Evolutions</div>;
 }
 
-export default Evolutions
+Evolutions.getLayout = function getLayout(page: ReactElement) {
+  return <PokemonLayout menuName="evolutions">{page}</PokemonLayout>;
+};
+export default Evolutions;

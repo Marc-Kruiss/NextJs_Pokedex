@@ -12,38 +12,39 @@ import { RiUser5Line, RiUser5Fill } from "react-icons/ri";
 
 export default function PokemonLayout({
   children,
+  menuName,
 }: {
   children: React.ReactNode;
+  menuName: string;
 }) {
   return (
     <>
       {children}
-      <BottomNav/>
+      <BottomNav tabName={menuName} />
     </>
   );
 }
 
-const BottomNav = () => {
+const BottomNav = ({ tabName }: { tabName: string }) => {
   const router = useRouter();
-  console.log("Current Route")
-  const pokeId = router.query.pokeId
-  const [activeTabs, setActiveTabs] = useState("home");
+  const [activeTabs, setActiveTabs] = useState(tabName);
   useEffect(() => {
+    const pokeId = router.query.pokeId;
     switch (activeTabs) {
-      case "home":
-        router.push(`./${pokeId}`);
+      case "index":
+        router.push(`/pokemon/${pokeId}`);
         break;
-      case "search":
-        router.push(`./${pokeId}/evolutions`);
+      case "evolutions":
+        router.push(`/pokemon/${pokeId}/evolutions`);
         break;
-      case "saved":
-        router.push(`./${pokeId}/types`);
+      case "types":
+        router.push(`/pokemon/${pokeId}/types`);
         break;
-      case "account":
-        router.push(`./${pokeId}/moves`);
+      case "moves":
+        router.push(`/pokemon/${pokeId}/moves`);
         break;
       default:
-        router.push(`./${pokeId}`);
+        router.push(`/pokemon/${pokeId}`);
         break;
     }
   }, [activeTabs]);
@@ -51,62 +52,62 @@ const BottomNav = () => {
   return (
     <div className={`${Styles.bottomNav}`}>
       <div className={`${Styles.bnTab}`}>
-        {activeTabs === "home" ? (
+        {activeTabs === "index" ? (
           <RiHomeSmile2Fill
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("home")}
+            onClick={() => setActiveTabs("index")}
           />
         ) : (
           <RiHomeSmile2Line
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("home")}
+            onClick={() => setActiveTabs("index")}
           />
         )}
       </div>
       <div className={`${Styles.bnTab}`}>
-        {activeTabs === "search" ? (
+        {activeTabs === "evolutions" ? (
           <RiSearchEyeFill
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("search")}
+            onClick={() => setActiveTabs("evolutions")}
           />
         ) : (
           <BiSearchAlt
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("search")}
+            onClick={() => setActiveTabs("evolutions")}
           />
         )}
       </div>
       <div className={`${Styles.bnTab}`}>
-        {activeTabs === "saved" ? (
+        {activeTabs === "types" ? (
           <AiFillHeart
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("saved")}
+            onClick={() => setActiveTabs("types")}
           />
         ) : (
           <AiOutlineHeart
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("saved")}
+            onClick={() => setActiveTabs("types")}
           />
         )}
       </div>
       <div className={`${Styles.bnTab}`}>
-        {activeTabs === "account" ? (
+        {activeTabs === "moves" ? (
           <RiUser5Fill
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("account")}
+            onClick={() => setActiveTabs("moves")}
           />
         ) : (
           <RiUser5Line
             size="35"
             color="#000"
-            onClick={() => setActiveTabs("account")}
+            onClick={() => setActiveTabs("moves")}
           />
         )}
       </div>

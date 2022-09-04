@@ -44,12 +44,13 @@ function PokemonDetail({ id }: PokeId) {
 
   const displayName = () => {
     if (pokemonData !== null) {
-      const languageName = pokemonData.pokemonSpeciesInfo?.names.filter(
-        (languageName) => (
-          languageName.language.name.toLowerCase() ===
+      const languageName = pokemonData.pokemonSpeciesInfo?.names
+        .filter(
+          (languageName) =>
+            languageName.language.name.toLowerCase() ===
             selectedLanguage.shortTerm.toLowerCase()
         )
-      ).at(0)
+        .at(0);
       if (languageName !== undefined) {
         return languageName.name;
       } else {
@@ -230,10 +231,8 @@ function PokemonDetail({ id }: PokeId) {
   );
 }
 
-PokemonDetail.getLayout = function getLayout(
-  page: ReactElement,
-) {
-  return <PokemonLayout>{page}</PokemonLayout>;
+PokemonDetail.getLayout = function getLayout(page: ReactElement) {
+  return <PokemonLayout menuName="index">{page}</PokemonLayout>;
 };
 export default PokemonDetail;
 

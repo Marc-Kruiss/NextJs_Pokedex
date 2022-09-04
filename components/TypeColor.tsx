@@ -23,6 +23,5 @@ const typeColors:Record<string,string> = {
 
 export function getTypeColor(name:string){
     const color = typeColors[name]
-    console.log(name+': '+color)
     return color
 }

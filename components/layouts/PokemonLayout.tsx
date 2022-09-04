@@ -17,7 +17,6 @@ export default function PokemonLayout({
   children: React.ReactNode;
   index: number;
 }) {
-  console.log("-->", index);
   return (
     <>
       {children}
@@ -28,6 +27,8 @@ export default function PokemonLayout({
 
 const BottomNav = ({ index }: { index: number }) => {
   const router = useRouter();
+  console.log("Current Route")
+  console.log(router.asPath)
   const [activeTabs, setActiveTabs] = useState("home");
   useEffect(() => {
     switch (activeTabs) {

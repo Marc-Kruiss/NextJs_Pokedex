@@ -46,16 +46,19 @@ const Layout: FC<Props> = ({ children, title }) => {
         <link rel="icon" href="/pokedex.png" />
       </Head>
 
-      <header className="bg-slate-900 py-10 mb-10">
+      <header className="bg-slate-900 pb-10 mb-10">
         <a>
           <div className="flex justify-center text-6xl text-center text-amber-400">
-            <Link href={"/"}>
-              <AiFillHome className="place-self-center mr-10" size={50} />
-            </Link>
+            <div className="flex flex-col justify-center">
+              <Link href={"/"}>
+                <AiFillHome className="place-self-center mr-10" size={50} />
+              </Link>
+              <div className="relative  mt-1">{renderLanguageDropdown()}</div>
+            </div>
+
             <h1 className="align-bottom">{title}</h1>
           </div>
         </a>
-        <div>{renderLanguageDropdown()}</div>
       </header>
 
       <main className="container mx-auto">{children}</main>

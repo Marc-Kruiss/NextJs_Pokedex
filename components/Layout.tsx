@@ -46,7 +46,7 @@ const Layout: FC<Props> = ({ children, title }) => {
         <link rel="icon" href="/pokedex.png" />
       </Head>
 
-      <header className="bg-slate-900 pb-10 mb-10">
+      <header className="bg-slate-900 pb-10 mb-10 pt-5">
         <a>
           <div className="flex justify-center text-6xl text-center text-amber-400">
             <div className="flex flex-col justify-center">

@@ -12,10 +12,8 @@ import { RiUser5Line, RiUser5Fill } from "react-icons/ri";
 
 export default function PokemonLayout({
   children,
-  index,
 }: {
   children: React.ReactNode;
-  index: number;
 }) {
   return (
     <>

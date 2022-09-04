@@ -232,15 +232,8 @@ function PokemonDetail({ id }: PokeId) {
 
 PokemonDetail.getLayout = function getLayout(
   page: ReactElement,
-  router: NextRouter
 ) {
-  const { pokeId } = router.query;
-
-  return pokeId && !Array.isArray(pokeId) ? (
-    <PokemonLayout index={Number(pokeId)}>{page}</PokemonLayout>
-  ) : (
-    <div>Something went wrong</div>
-  );
+  return <PokemonLayout>{page}</PokemonLayout>;
 };
 export default PokemonDetail;
 

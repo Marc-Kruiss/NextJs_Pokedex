@@ -1,6 +1,7 @@
 import { GetServerSideProps } from "next";
 import React, { ReactElement, useEffect, useState } from "react";
 import { GetPokemonLanguageName } from "../../../components/helper/language";
+import { capitalize } from "../../../components/helper/utilities";
 import Layout from "../../../components/Layout";
 import PokemonLayout from "../../../components/layouts/PokemonLayout";
 import Pokemon from "../../../components/Pokemon";
@@ -36,32 +37,37 @@ function Evolutions({ id }: PokeId) {
           if (index < pokemonData.evolvingChain.length - 1) {
             return (
               <div>
-                <div key={index} className="m-5 flex flex-row place-content-evenly">
-                <div className="">
-                  <Pokemon
-                    name={chainEntry.name}
-                    index={
-                      pokemonData!.pokemonInfo!.id + chainEntry.indexOffset
-                    }
-                  />
+                <div
+                  key={index}
+                  className="m-5 flex flex-row place-content-evenly"
+                >
+                  <div className="">
+                    <Pokemon
+                      name={chainEntry.name}
+                      index={
+                        pokemonData!.pokemonInfo!.id + chainEntry.indexOffset
+                      }
+                    />
+                  </div>
+                  <p className="place-self-center">Level xy</p>
+                  <div>
+                    <Pokemon
+                      name={chainEntry.name}
+                      index={
+                        pokemonData!.pokemonInfo!.id +
+                        chainEntry.indexOffset +
+                        1
+                      }
+                    />
+                  </div>
                 </div>
-                    <p className="place-self-center">
-                      Level xy
-                    </p>
-                <div>
-                  <Pokemon
-                    name={chainEntry.name}
-                    index={
-                      pokemonData!.pokemonInfo!.id + chainEntry.indexOffset + 1
-                    }
-                  />
-                </div>
+                <p className="text-center mb-5">
+                  {capitalize(chainEntry.name)} evolves to{" "}
+                  {capitalize(pokemonData.evolvingChain[index + 1].name)}
+                </p>
+                <hr />
+                <br />
               </div>
-              <p className="text-center mb-5">yx evolves to xy</p>
-              <hr />
-              <br />
-              </div>
-              
             );
           } else {
             return;
@@ -71,7 +77,9 @@ function Evolutions({ id }: PokeId) {
 
   return (
     <Layout title={GetPokemonLanguageName()}>
-      <div className="text-5xl mb-16 text-center text-stone-300">Evolutions for {GetPokemonLanguageName()}</div>
+      <div className="text-5xl mb-16 text-center text-stone-300">
+        Evolutions for {GetPokemonLanguageName()}
+      </div>
 
       <div>{renderEvolutionChain()}</div>
     </Layout>

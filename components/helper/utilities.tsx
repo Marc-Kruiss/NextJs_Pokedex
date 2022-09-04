@@ -1,5 +1,9 @@
 import { IChainEntry } from "../types/PokemonInterfaces";
 
+export function capitalize(input:string){
+  return input.charAt(0).toUpperCase() + input.slice(1)
+}
+
 export function numberToThreeBasedString(number: number) {
   return ("000" + number).slice(-3).toString();
 }

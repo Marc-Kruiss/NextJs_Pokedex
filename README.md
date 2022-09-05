@@ -1,6 +1,9 @@
 # Pokedex
 > This Next.js project uses Tailwind with the flowbite plugin for styling and the PokeApi as the datasource 
 
+## 🌐 Api
+* [PokeApi](https://pokeapi.co/)
+
 ## 🚀 Technologies
 * [NextJs](https://nextjs.org/)
 * [Tailwindcss](https://tailwindcss.com/)

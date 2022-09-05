@@ -1,6 +1,24 @@
 # Pokedex
 > This Next.js project uses Tailwind with the flowbite plugin for styling and the PokeApi as the datasource 
 
+## 🚀 Technologies
+* [NextJs](https://nextjs.org/)
+* [Tailwindcss](https://tailwindcss.com/)
+* [Typescript](https://www.typescriptlang.org/)
+
+## 🧠 Functionalities
+- [x] List all Pokemon using pre-rendering method
+- [x] Search by Name
+- [x] Change language and update content in realtime
+- [x] Pokemon Bottom Navigation
+- [x] Show Pokemon Stats
+- [x] Show Pokemno Evolution Chain
+- [x] Pokemon Image selection via image-carousel 
+- [ ] Show Level of next evolution step
+- [ ] Show Typeinformation (weak/strong against)
+- [ ] Show height relative to character image
+
+## ⚡ Getting started
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

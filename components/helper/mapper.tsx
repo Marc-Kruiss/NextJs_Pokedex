@@ -1,4 +1,5 @@
 import { IPokemonInfo, PokemonListResponse } from "../types/PokemonInterfaces";
+import { TypeInfo } from "./pokemonContext";
 
 export function mapPokemonListResponse(respond: any): PokemonListResponse {
   try {
@@ -24,6 +25,18 @@ export function mapPokemonInfo(
       types: pokemon_respond.types,
       sprites: pokemon_respond.sprites,
       evolution_chain_url: species_respond.evolution_chain.url,
+    };
+  } catch (error) {
+    throw new Error("The mapping of PokemonInfo went wrong");
+  }
+}
+
+export function mapTypeInfo(
+  type_respond:any
+):TypeInfo{
+  try {
+    return {
+      damage_relations: type_respond.damage_relations
     };
   } catch (error) {
     throw new Error("The mapping of PokemonInfo went wrong");

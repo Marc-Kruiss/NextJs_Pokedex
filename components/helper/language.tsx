@@ -29,7 +29,6 @@ export const getCorrectLanguageName = async (
 export const GetPokemonLanguageName = () => {
   const {pokemonData} = usePokemonInfo()
   const {selectedLanguage} = useLanguage()
-  console.log("Calculate Name")
   if (pokemonData !== null) {
     const languageName = pokemonData.pokemonSpeciesInfo?.names
       .filter(

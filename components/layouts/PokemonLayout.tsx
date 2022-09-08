@@ -5,8 +5,14 @@ import {
   RiHomeSmile2Line,
   RiHomeSmile2Fill,
   RiSearchEyeFill,
+  RiInformationFill,
+  RiInformationLine,
+  RiArrowUpCircleFill,
+  RiArrowUpCircleLine,
+  RiSwordFill,
+  RiSwordLine,
 } from "react-icons/ri";
-import { BiSearchAlt } from "react-icons/bi";
+import { BiCategory, BiCategoryAlt, BiSearchAlt } from "react-icons/bi";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { RiUser5Line, RiUser5Fill } from "react-icons/ri";
 
@@ -53,13 +59,13 @@ const BottomNav = ({ tabName }: { tabName: string }) => {
     <div className={`${Styles.bottomNav}`}>
       <div className={`${Styles.bnTab}`}>
         {activeTabs === "index" ? (
-          <RiHomeSmile2Fill
+          <RiInformationFill
             size="35"
             color="#000"
             onClick={() => setActiveTabs("index")}
           />
         ) : (
-          <RiHomeSmile2Line
+          <RiInformationLine
             size="35"
             color="#000"
             onClick={() => setActiveTabs("index")}
@@ -68,13 +74,13 @@ const BottomNav = ({ tabName }: { tabName: string }) => {
       </div>
       <div className={`${Styles.bnTab}`}>
         {activeTabs === "evolutions" ? (
-          <RiSearchEyeFill
+          <RiArrowUpCircleFill
             size="35"
             color="#000"
             onClick={() => setActiveTabs("evolutions")}
           />
         ) : (
-          <BiSearchAlt
+          <RiArrowUpCircleLine
             size="35"
             color="#000"
             onClick={() => setActiveTabs("evolutions")}
@@ -83,13 +89,13 @@ const BottomNav = ({ tabName }: { tabName: string }) => {
       </div>
       <div className={`${Styles.bnTab}`}>
         {activeTabs === "types" ? (
-          <AiFillHeart
+          <BiCategory
             size="35"
             color="#000"
             onClick={() => setActiveTabs("types")}
           />
         ) : (
-          <AiOutlineHeart
+          <BiCategoryAlt
             size="35"
             color="#000"
             onClick={() => setActiveTabs("types")}
@@ -98,13 +104,13 @@ const BottomNav = ({ tabName }: { tabName: string }) => {
       </div>
       <div className={`${Styles.bnTab}`}>
         {activeTabs === "moves" ? (
-          <RiUser5Fill
+          <RiSwordFill
             size="35"
             color="#000"
             onClick={() => setActiveTabs("moves")}
           />
         ) : (
-          <RiUser5Line
+          <RiSwordLine
             size="35"
             color="#000"
             onClick={() => setActiveTabs("moves")}

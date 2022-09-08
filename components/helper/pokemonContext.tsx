@@ -1,6 +1,7 @@
+import { type } from "os";
 import { SortedArray } from "typescript";
 import { IChainEntry } from "../types/PokemonInterfaces";
-import { getEvolvingChainNamesByUrl, getFilteredSprites, getTypeInfoByUrl, numberToThreeBasedString } from "./utilities";
+import { getEvolvingChainNamesByUrl, getFilteredSprites, getMoveInfoByUrl, getTypeInfoByUrl, numberToThreeBasedString } from "./utilities";
 
 //#region types
 export interface PokemonType {
@@ -21,6 +22,20 @@ export interface TypeInfo{
   }
 } 
 
+export interface MoveInfo{
+  accuracy:number,
+  pp:number,
+  power:number,
+  contest:string,
+  type:{
+    name:string,
+    url:string
+  },
+  damage_class:{
+    name:string
+  }
+
+}
 
 type PokemonSearchinfo = {
   name: string;
@@ -49,12 +64,21 @@ interface IType {
   info:TypeInfo
 }
 
+export interface IMove{
+  move:{
+    name:string,
+    url:string
+  },
+  info:MoveInfo
+}
+
 type PokemonInfo = {
   id: number;
   weight: number;
   sprites:string[]// Record<string, string>;
   stats: IPokemonState[];
   types: IType[];
+  moves:IMove[];
 };
 
 function mapperSpecies(species_respond: any): PokemonSpeciesInfo {
@@ -84,6 +108,7 @@ function mapperInfo(info_respond: any): PokemonInfo {
       weight: 5,
       stats: [],
       types: [],
+      moves:[]
     };
   } else {
     return {
@@ -95,6 +120,7 @@ function mapperInfo(info_respond: any): PokemonInfo {
       ),
       stats: info_respond.stats,
       types: info_respond.types,
+      moves: info_respond.moves
     };
   }
 }
@@ -129,6 +155,11 @@ export async function getPokemonData(
   pokemonInfo.types.forEach(async element => {
     element.info = await getTypeInfoByUrl(element.type.url)
   });
+  console.log(pokemonInfo.moves)
+  pokemonInfo.moves?.forEach(async element => {
+    element.info = await getMoveInfoByUrl(element.move.url)
+  });
+
 
 
   const pokemon: PokemonType = {
@@ -142,6 +173,7 @@ export async function getPokemonData(
     pokemon.pokemonSpeciesInfo !== undefined &&
     evolvingChainPokemons !== undefined
   ) {
+    console.log(pokemon)
     pokemonInfoSetter(pokemon);
   } else {
     console.log("Failure");

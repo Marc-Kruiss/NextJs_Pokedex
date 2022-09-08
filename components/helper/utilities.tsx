@@ -1,6 +1,6 @@
 import { IChainEntry } from "../types/PokemonInterfaces";
-import { mapTypeInfo } from "./mapper";
-import { TypeInfo } from "./pokemonContext";
+import { mapMoveInfo, mapTypeInfo } from "./mapper";
+import { MoveInfo, TypeInfo } from "./pokemonContext";
 
 export function capitalize(input: string) {
   return input.charAt(0).toUpperCase() + input.slice(1);
@@ -15,6 +15,13 @@ export async function getTypeInfoByUrl(url: string) {
   const typeInfo: TypeInfo = await type_response.json().then((data) => mapTypeInfo(data));
 
   return typeInfo;
+}
+
+export async function getMoveInfoByUrl(url:string){
+  const move_response = await fetch(url);
+  const moveInfo:MoveInfo = await move_response.json().then((data)=> mapMoveInfo(data))
+
+  return moveInfo;
 }
 
 export async function getEvolvingChainNamesByUrl(

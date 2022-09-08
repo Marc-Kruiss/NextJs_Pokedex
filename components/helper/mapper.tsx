@@ -1,5 +1,5 @@
 import { IPokemonInfo, PokemonListResponse } from "../types/PokemonInterfaces";
-import { TypeInfo } from "./pokemonContext";
+import { MoveInfo, TypeInfo } from "./pokemonContext";
 
 export function mapPokemonListResponse(respond: any): PokemonListResponse {
   try {
@@ -39,6 +39,27 @@ export function mapTypeInfo(
       damage_relations: type_respond.damage_relations
     };
   } catch (error) {
-    throw new Error("The mapping of PokemonInfo went wrong");
+    throw new Error("The mapping of TypeInfo went wrong");
+  }
+}
+
+export function mapMoveInfo(
+  move_respond:any
+):MoveInfo{
+  //console.log(move_respond)
+  try {
+    
+    return{
+      accuracy: move_respond.accuracy,
+      contest: move_respond.contest_type?move_respond.contest_type.name:null,
+      power: move_respond.power,
+      pp:move_respond.pp,
+      damage_class:move_respond.damage_class,
+      type:move_respond.type
+    }
+  } catch (error) {
+    throw error;
+
+
   }
 }

@@ -1,5 +1,5 @@
 const typeColors:Record<string,string> = {
-    normal:"#64ff00",
+    normal:"#bcbcbc",
     fighting:"#8f8b52",
     flying:"#baf8ff9e",
     poison:"#3f5a4b",

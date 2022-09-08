@@ -20,12 +20,14 @@ function Evolutions({ id }: PokeId) {
   useEffect(() => {
     const initComponents = async () => {
       if (pokemonData === null) {
+        console.log("Load pokemon")
         await initPokemonInfo(id);
       }
-
-      if (pokemonData !== null && pokemonData.pokemonInfo?.id !== id) {
+      else if (pokemonData.pokemonInfo?.id != id) {
+        console.log("Reload pokemon")
         await initPokemonInfo(id);
       } else {
+        console.log("Already loaded")
       }
     };
     initComponents();

@@ -1,18 +1,26 @@
 import { SortedArray } from "typescript";
 import { IChainEntry } from "../types/PokemonInterfaces";
-import { getEvolvingChainNamesByUrl, getFilteredSprites, numberToThreeBasedString } from "./utilities";
+import { getEvolvingChainNamesByUrl, getFilteredSprites, getTypeInfoByUrl, numberToThreeBasedString } from "./utilities";
 
 //#region types
 export interface PokemonType {
   pokemonSpeciesInfo: PokemonSpeciesInfo | undefined;
   pokemonInfo: PokemonInfo | undefined;
   evolvingChain: IChainEntry[];
+  //typeInfo: TypeInfo
 }
 
-interface EvolutionChain {
-  species: { name: string };
-  evolves_to?: EvolutionChain;
-}
+export interface TypeInfo{
+  damage_relations:{
+    double_damage_from:{name:string, url:string}[],
+    double_damage_to:{name:string, url:string}[],
+    half_damage_from:{name:string, url:string}[],
+    half_damage_to:{name:string, url:string}[],
+    no_damage_from:{name:string, url:string}[],
+    no_damage_to:{name:string, url:string}[]
+  }
+} 
+
 
 type PokemonSearchinfo = {
   name: string;
@@ -38,6 +46,7 @@ interface IType {
     name: string;
     url: string;
   };
+  info:TypeInfo
 }
 
 type PokemonInfo = {
@@ -116,6 +125,11 @@ export async function getPokemonData(
     speciesInfo.evolution_chain_url,
     speciesInfo.name
   );
+
+  pokemonInfo.types.forEach(async element => {
+    element.info = await getTypeInfoByUrl(element.type.url)
+  });
+
 
   const pokemon: PokemonType = {
     pokemonInfo: pokemonInfo,

@@ -1,11 +1,20 @@
 import { IChainEntry } from "../types/PokemonInterfaces";
+import { mapTypeInfo } from "./mapper";
+import { TypeInfo } from "./pokemonContext";
 
-export function capitalize(input:string){
-  return input.charAt(0).toUpperCase() + input.slice(1)
+export function capitalize(input: string) {
+  return input.charAt(0).toUpperCase() + input.slice(1);
 }
 
 export function numberToThreeBasedString(number: number) {
   return ("000" + number).slice(-3).toString();
+}
+
+export async function getTypeInfoByUrl(url: string) {
+  const type_response = await fetch(url);
+  const typeInfo: TypeInfo = await type_response.json().then((data) => mapTypeInfo(data));
+
+  return typeInfo;
 }
 
 export async function getEvolvingChainNamesByUrl(

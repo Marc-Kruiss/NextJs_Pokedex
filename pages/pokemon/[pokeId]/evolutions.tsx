@@ -45,7 +45,7 @@ function Evolutions({ id }: PokeId) {
                   <div className="">
                     <Pokemon
                       name={chainEntry.name}
-                      index={pokemonData!.pokemonInfo!.id + chainEntry.index}
+                      index={chainEntry.index}
                     />
                   </div>
                   <p className="place-self-center">Level xy</p>
@@ -53,7 +53,7 @@ function Evolutions({ id }: PokeId) {
                     <Pokemon
                       name={chainEntry.name}
                       index={
-                        pokemonData!.pokemonInfo!.id + chainEntry.index + 1
+                        pokemonData.evolvingChain[index+1].index
                       }
                     />
                   </div>

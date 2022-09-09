@@ -46,7 +46,6 @@ export function mapTypeInfo(
 export function mapMoveInfo(
   move_respond:any
 ):MoveInfo{
-  //console.log(move_respond)
   try {
     
     return{

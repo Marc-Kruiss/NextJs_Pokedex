@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import React, { useEffect, useMemo, useState } from "react";
 import Pokemon from "../components/Pokemon";
 import { GetStaticProps } from "next";
-import { PokemonListResponse } from "../components/types/PokemonInterfaces";
+import { IPokemonUrl, PokemonListResponse } from "../components/types/PokemonInterfaces";
 import { mapPokemonListResponse } from "../components/helper/mapper";
 import { AiOutlineSearch } from "react-icons/ai";
 import { stringify } from "querystring";
@@ -17,10 +17,7 @@ export default function Home({ initialPokemon }: HomeData) {
   const [searchInput, setSearchInput] = useState("");
   const [pokemon, setPokemon] = useState<PokemonListResponse>(initialPokemon);
 
-  //const [pagePokemonAmount, setPagePokemonAmount] = useState(20);
   const [offset, setOffset] = useState(0);
-
-  //const { initAllPokemons, allPokemons } = usePokemons();
 
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -30,15 +27,7 @@ export default function Home({ initialPokemon }: HomeData) {
     return () => clearTimeout(delayDebounceFn);
   }, [searchInput]);
 
-  /*useEffect(() => {
-    if (allPokemons.length === 0) {
-      initAllPokemons().then(() => console.log(allPokemons));
-    } else {
-      console.log(allPokemons);
-    }
-  }, []);*/
-
-  const fetchPokemon = async (url:string,isNext: boolean) => {
+  const fetchPokemon = async (url: string, isNext: boolean) => {
     const response = await fetch(url);
     const nextPokemon: PokemonListResponse = await response
       .json()
@@ -60,9 +49,9 @@ export default function Home({ initialPokemon }: HomeData) {
       },
     });
 
-    const filteredPokemons = await response.json().then((data) => {
+    const filteredPokemons:IPokemonUrl[] = await response.json().then((data) => {
       return data.filteredPokemons;
-    });
+    })
 
     const data: PokemonListResponse = {
       nextUrl: "",
@@ -86,30 +75,25 @@ export default function Home({ initialPokemon }: HomeData) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 p-5">
-        
         {pokemon.pokemonList.map((info, index) => (
           <div key={index}>
-            <Pokemon
-            name={info.name}
-            index={index+1+offset}
-          />
-            </div>
+            <Pokemon name={info.name} index={info.id?info.id+1: index + 1 + offset} />
+          </div>
         ))}
-        
       </div>
 
       <div className="mt-10 flex justify-center gap-5">
         <button
-          disabled={pokemon.previousUrl===null}
+          disabled={pokemon.previousUrl === null}
           className="px-3 py-1 bg-slate-900 rounded-lg disabled:bg-gray-600"
-          onClick={() => fetchPokemon(pokemon.previousUrl,false)}
+          onClick={() => fetchPokemon(pokemon.previousUrl, false)}
         >
           prev
         </button>
         <button
-          disabled={pokemon.nextUrl===null}
+          disabled={pokemon.nextUrl === null}
           className="px-3 py-1 bg-slate-900 rounded-lg disabled:bg-gray-600"
-          onClick={() => fetchPokemon(pokemon.nextUrl,true)}
+          onClick={() => fetchPokemon(pokemon.nextUrl, true)}
         >
           next
         </button>
@@ -121,7 +105,6 @@ export default function Home({ initialPokemon }: HomeData) {
 export const getStaticProps: GetStaticProps = async (context) => {
   const response = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
 
-  //const allPokemons = await getAllPokemons()
   const initialPokemon: PokemonListResponse = await response
     .json()
     .then((value) => mapPokemonListResponse(value));

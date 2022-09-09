@@ -24,7 +24,6 @@ export default async function handler(
       .filter((p) =>
         p.name.toLowerCase().startsWith(String(searchTerm).toLowerCase())
       );
-
     res.end(JSON.stringify({ filteredPokemons: filteredPokemons }));
   }
 }

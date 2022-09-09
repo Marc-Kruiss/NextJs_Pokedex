@@ -40,22 +40,16 @@ function PokemonDetail({ id }: PokeId) {
   let thumbnailUrls: string[] = [];
   const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState<number>(0);
 
-  
-
-  //const [selectedImageUrlIndex, setSelectedImageUrlIndex] = useState(0);
-  //#endregion
-
   useEffect(() => {
     const initComponents = async () => {
       if (pokemonData === null) {
-        console.log("Load pokemon")
+        console.log("Load pokemon");
         await initPokemonInfo(id);
-      }
-      else if (pokemonData.pokemonInfo?.id != id) {
-        console.log("Reload pokemon")
+      } else if (pokemonData.pokemonInfo?.id != id) {
+        console.log("Reload pokemon");
         await initPokemonInfo(id);
       } else {
-        console.log("Already loaded")
+        console.log("Already loaded");
       }
     };
     initComponents();
@@ -99,10 +93,7 @@ function PokemonDetail({ id }: PokeId) {
     pokemonData?.evolvingChain
       ? pokemonData.evolvingChain.map((chainEntry, index) => (
           <div key={index} className="m-5">
-            <Pokemon
-              name={chainEntry.name}
-              index={pokemonData!.pokemonInfo!.id + chainEntry.indexOffset}
-            />
+            <Pokemon name={chainEntry.name} index={chainEntry.index} />
           </div>
         ))
       : null;
@@ -236,4 +227,3 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
-

@@ -1,6 +1,6 @@
 export interface IChainEntry {
   name: string;
-  indexOffset: number;
+  index: number;
 }
 
 interface IType {

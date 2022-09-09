@@ -12,14 +12,18 @@ export function numberToThreeBasedString(number: number) {
 
 export async function getTypeInfoByUrl(url: string) {
   const type_response = await fetch(url);
-  const typeInfo: TypeInfo = await type_response.json().then((data) => mapTypeInfo(data));
+  const typeInfo: TypeInfo = await type_response
+    .json()
+    .then((data) => mapTypeInfo(data));
 
   return typeInfo;
 }
 
-export async function getMoveInfoByUrl(url:string){
+export async function getMoveInfoByUrl(url: string) {
   const move_response = await fetch(url);
-  const moveInfo:MoveInfo = await move_response.json().then((data)=> mapMoveInfo(data))
+  const moveInfo: MoveInfo = await move_response
+    .json()
+    .then((data) => mapMoveInfo(data));
 
   return moveInfo;
 }
@@ -32,25 +36,28 @@ export async function getEvolvingChainNamesByUrl(
   const evolutionChainResponse = await fetch(evolutionChainUrl);
   const evolutionChain = await evolutionChainResponse.json();
 
-  var names: string[] = [];
+  var pokemons: { name: string; url: string; id: number }[] = [];
 
   var chainState = evolutionChain.chain;
   while (chainState.evolves_to.length != 0) {
     // while next evolution exists
-    names = [...names, chainState.species.name];
+    pokemons = [...pokemons, chainState.species];
     chainState = chainState.evolves_to[0];
   }
-  names = [...names, chainState.species.name];
+  pokemons = [...pokemons, chainState.species];
 
-  const localCurrentIndex = names.findIndex(
-    (n) => n.toLowerCase() === currentPokeName.toLowerCase()
+  await Promise.all(
+    pokemons.map(async (pokemon) => {
+      const speciesResponse = await fetch(pokemon.url);
+      await speciesResponse.json().then((data) => (pokemon.id = data.id));
+    })
   );
 
-  let chainEntries: IChainEntry[] = new Array<IChainEntry>(names.length);
-  for (let i = 0; i < names.length; i++) {
+  let chainEntries: IChainEntry[] = new Array<IChainEntry>(pokemons.length);
+  for (let i = 0; i < pokemons.length; i++) {
     chainEntries[i] = {
-      indexOffset: i - localCurrentIndex,
-      name: names[i],
+      index: pokemons[i].id,
+      name: pokemons[i].name,
     };
   }
 

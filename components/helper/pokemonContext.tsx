@@ -1,7 +1,13 @@
 import { type } from "os";
 import { SortedArray } from "typescript";
 import { IChainEntry } from "../types/PokemonInterfaces";
-import { getEvolvingChainNamesByUrl, getFilteredSprites, getMoveInfoByUrl, getTypeInfoByUrl, numberToThreeBasedString } from "./utilities";
+import {
+  getEvolvingChainNamesByUrl,
+  getFilteredSprites,
+  getMoveInfoByUrl,
+  getTypeInfoByUrl,
+  numberToThreeBasedString,
+} from "./utilities";
 
 //#region types
 export interface PokemonType {
@@ -11,30 +17,29 @@ export interface PokemonType {
   //typeInfo: TypeInfo
 }
 
-export interface TypeInfo{
-  damage_relations:{
-    double_damage_from:{name:string, url:string}[],
-    double_damage_to:{name:string, url:string}[],
-    half_damage_from:{name:string, url:string}[],
-    half_damage_to:{name:string, url:string}[],
-    no_damage_from:{name:string, url:string}[],
-    no_damage_to:{name:string, url:string}[]
-  }
-} 
+export interface TypeInfo {
+  damage_relations: {
+    double_damage_from: { name: string; url: string }[];
+    double_damage_to: { name: string; url: string }[];
+    half_damage_from: { name: string; url: string }[];
+    half_damage_to: { name: string; url: string }[];
+    no_damage_from: { name: string; url: string }[];
+    no_damage_to: { name: string; url: string }[];
+  };
+}
 
-export interface MoveInfo{
-  accuracy:number,
-  pp:number,
-  power:number,
-  contest:string,
-  type:{
-    name:string,
-    url:string
-  },
-  damage_class:{
-    name:string
-  }
-
+export interface MoveInfo {
+  accuracy: number;
+  pp: number;
+  power: number;
+  contest: string;
+  type: {
+    name: string;
+    url: string;
+  };
+  damage_class: {
+    name: string;
+  };
 }
 
 type PokemonSearchinfo = {
@@ -61,24 +66,24 @@ interface IType {
     name: string;
     url: string;
   };
-  info:TypeInfo
+  info: TypeInfo;
 }
 
-export interface IMove{
-  move:{
-    name:string,
-    url:string
-  },
-  info:MoveInfo
+export interface IMove {
+  move: {
+    name: string;
+    url: string;
+  };
+  info: MoveInfo;
 }
 
 type PokemonInfo = {
   id: number;
   weight: number;
-  sprites:string[]// Record<string, string>;
+  sprites: string[]; // Record<string, string>;
   stats: IPokemonState[];
   types: IType[];
-  moves:IMove[];
+  moves: IMove[];
 };
 
 function mapperSpecies(species_respond: any): PokemonSpeciesInfo {
@@ -104,11 +109,11 @@ function mapperInfo(info_respond: any): PokemonInfo {
   if (info_respond === undefined) {
     return {
       id: 1000,
-      sprites: [],//{ sprite: "none_sprite" },
+      sprites: [], //{ sprite: "none_sprite" },
       weight: 5,
       stats: [],
       types: [],
-      moves:[]
+      moves: [],
     };
   } else {
     return {
@@ -120,7 +125,7 @@ function mapperInfo(info_respond: any): PokemonInfo {
       ),
       stats: info_respond.stats,
       types: info_respond.types,
-      moves: info_respond.moves
+      moves: info_respond.moves,
     };
   }
 }
@@ -152,15 +157,12 @@ export async function getPokemonData(
     speciesInfo.name
   );
 
-  pokemonInfo.types.forEach(async element => {
-    element.info = await getTypeInfoByUrl(element.type.url)
+  pokemonInfo.types.forEach(async (element) => {
+    element.info = await getTypeInfoByUrl(element.type.url);
   });
-  console.log(pokemonInfo.moves)
-  pokemonInfo.moves?.forEach(async element => {
-    element.info = await getMoveInfoByUrl(element.move.url)
+  pokemonInfo.moves?.forEach(async (element) => {
+    element.info = await getMoveInfoByUrl(element.move.url);
   });
-
-
 
   const pokemon: PokemonType = {
     pokemonInfo: pokemonInfo,
@@ -173,7 +175,7 @@ export async function getPokemonData(
     pokemon.pokemonSpeciesInfo !== undefined &&
     evolvingChainPokemons !== undefined
   ) {
-    console.log(pokemon)
+    console.log(pokemon);
     pokemonInfoSetter(pokemon);
   } else {
     console.log("Failure");

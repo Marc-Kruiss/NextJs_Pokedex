@@ -10,19 +10,21 @@ interface Props {
 }
 
 function Pokemon({ name, index }: Props) {
-  const pokeIndex = ("000" + index).slice(-3);
+  let pokeIndex = ("000" + index).slice(-3);
   const { selectedLanguage } = useLanguage();
   const [pokemonName, setPokemonName] = useState("");
 
+  const [isValid, setIsValid] = useState(false)
+
   useEffect(() => {
-    getCorrectLanguageName(
-      selectedLanguage.shortTerm,
-      name,
-      setPokemonName
-    ).catch(console.error);
+    getCorrectLanguageName(selectedLanguage.shortTerm, name, setPokemonName)
+      .then(() => {
+        setIsValid(true);
+      })
   }, [name, selectedLanguage]);
 
-  return (
+  return isValid ?
+   (
     <Link href={`/pokemon/${index}`}>
       <div
         className="bg-slate-900 rounded p-5 flex flex-col justify-center items-center relative shadow-md
@@ -46,7 +48,12 @@ function Pokemon({ name, index }: Props) {
         </span>
       </div>
     </Link>
-  );
+  ):
+  (
+    <div>
+      Invalid
+    </div>
+  )
 }
 
 export default Pokemon;

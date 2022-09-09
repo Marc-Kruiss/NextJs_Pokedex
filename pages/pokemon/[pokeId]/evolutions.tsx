@@ -20,14 +20,13 @@ function Evolutions({ id }: PokeId) {
   useEffect(() => {
     const initComponents = async () => {
       if (pokemonData === null) {
-        console.log("Load pokemon")
+        console.log("Load pokemon");
         await initPokemonInfo(id);
-      }
-      else if (pokemonData.pokemonInfo?.id != id) {
-        console.log("Reload pokemon")
+      } else if (pokemonData.pokemonInfo?.id != id) {
+        console.log("Reload pokemon");
         await initPokemonInfo(id);
       } else {
-        console.log("Already loaded")
+        console.log("Already loaded");
       }
     };
     initComponents();
@@ -46,9 +45,7 @@ function Evolutions({ id }: PokeId) {
                   <div className="">
                     <Pokemon
                       name={chainEntry.name}
-                      index={
-                        pokemonData!.pokemonInfo!.id + chainEntry.indexOffset
-                      }
+                      index={pokemonData!.pokemonInfo!.id + chainEntry.index}
                     />
                   </div>
                   <p className="place-self-center">Level xy</p>
@@ -56,9 +53,7 @@ function Evolutions({ id }: PokeId) {
                     <Pokemon
                       name={chainEntry.name}
                       index={
-                        pokemonData!.pokemonInfo!.id +
-                        chainEntry.indexOffset +
-                        1
+                        pokemonData!.pokemonInfo!.id + chainEntry.index + 1
                       }
                     />
                   </div>

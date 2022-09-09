@@ -20,7 +20,7 @@ function Pokemon({ name, index }: Props) {
     getCorrectLanguageName(selectedLanguage.shortTerm, name, setPokemonName)
       .then(() => {
         setIsValid(true);
-      })
+      }).catch(()=>console.log("Couldnt catch"))
   }, [name, selectedLanguage]);
 
   return isValid ?
@@ -50,9 +50,7 @@ function Pokemon({ name, index }: Props) {
     </Link>
   ):
   (
-    <div>
-      Invalid
-    </div>
+    <></>
   )
 }
 

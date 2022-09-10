@@ -25,6 +25,7 @@ function Moves({ id }: PokeId) {
     Type,
     PowerPoints,
   }
+
   const [selectedFilter, setSelectedFilter] = useState<number | null>(null);
   const [isAsc, setIsAsc] = useState(true);
 

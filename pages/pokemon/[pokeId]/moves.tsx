@@ -122,7 +122,7 @@ function Moves({ id }: PokeId) {
     <div className="w-full">
       <Layout title={GetPokemonLanguageName()}>
         <div className="flex flex-row mb-5 mx-5 items-center">
-          <div className="flex flex-row items-center w-2/3">
+          <div className="flex flex-row items-center w-2/3 float-left">
             <div className="mr-3">{RenderFilterTypes()}</div>
             <div>
               {selectedFilter != null ? (
@@ -135,9 +135,9 @@ function Moves({ id }: PokeId) {
             </div>
           </div>
 
-          <div className="w-1/3 relative ">
+          <div className="w-1/3">
             <button
-              className="bg-blue-500 hover:bg-blue-700 disabled:bg-gray-400 text-white font-bold py-2 px-4 rounded-full"
+              className="bg-blue-500 hover:bg-blue-700 float-right disabled:bg-gray-400 text-white font-bold py-2 px-4 rounded-full"
               onClick={() => setIsAsc(isAsc ? false : true)}
               disabled={selectedFilter == null}
             >

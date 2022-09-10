@@ -48,7 +48,7 @@ function Moves({ id }: PokeId) {
     <div className="w-full">
       <Layout title={GetPokemonLanguageName()}>
         <div>
-          {pokemonData?.pokemonInfo?.moves.map((move, index) => {
+          {pokemonData?.pokemonInfo?.moves.sort(compareMoves).map((move, index) => {
             const color = getTypeColor(move.info.type.name);
             return (
               <div
@@ -77,6 +77,23 @@ Moves.getLayout = function getLayout(page: ReactElement) {
   return <PokemonLayout menuName="moves">{page}</PokemonLayout>;
 };
 export default Moves;
+
+function compareMoves( a:IMove, b:IMove ) {
+  if(!a.info){
+    return -1
+  }
+  if(!b.info){
+    return -1
+  }
+
+  if ( a.info.type.name < b.info.type.name ){
+    return -1;
+  }
+  if ( a.info.type.name > b.info.type.name ){
+    return 1;
+  }
+  return 0;
+}
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {

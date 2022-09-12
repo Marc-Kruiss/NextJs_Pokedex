@@ -11,7 +11,7 @@ import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
 
 function Evolutions() {
   const router = useRouter();
-  const id = parseInt(router.query.pokeId!.toString());
+  const id = parseInt((router.query.pokeId||"1").toString());
 
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
   const { selectedLanguage } = useLanguage();
@@ -32,9 +32,10 @@ function Evolutions() {
     initComponents();
   }, [id]);
 
-  const renderEvolutionChain = () =>
-    pokemonData?.evolvingChain
-      ? pokemonData.evolvingChain.map((chainEntry, index) => {
+  const renderEvolutionChain = () =>{
+    if (!pokemonData) return <div>Loading...</div>
+
+    return pokemonData.evolvingChain.map((chainEntry, index) => {
           if (index < pokemonData.evolvingChain.length - 1) {
             return (
               <div key={index}>
@@ -62,7 +63,7 @@ function Evolutions() {
             return;
           }
         })
-      : null;
+      }
 
   return (
     <Layout title={GetPokemonLanguageName()}>

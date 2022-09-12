@@ -27,7 +27,7 @@ import { GetPokemonLanguageName } from "../../../components/helper/language";
 
 function PokemonDetail() {
   const router = useRouter();
-  const id = parseInt(router.query.pokeId!.toString());
+  const id = parseInt((router.query.pokeId || "1").toString());
 
   //#region Variables
   const { selectedLanguage } = useLanguage();
@@ -137,7 +137,9 @@ function PokemonDetail() {
 
   //#endregion
 
-  return pokemonData ? (
+  if (!pokemonData) return <div>Loading...</div>;
+
+  return (
     <div className="w-full">
       <Layout title={GetPokemonLanguageName()}>
         <div
@@ -180,10 +182,6 @@ function PokemonDetail() {
           </div>
         </div>
       </Layout>
-    </div>
-  ) : (
-    <div>
-      <h1>Loading Data..</h1>
     </div>
   );
 }

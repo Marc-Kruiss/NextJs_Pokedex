@@ -15,7 +15,7 @@ import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
 
 function Moves() {
   const router = useRouter();
-  const id = parseInt(router.query.pokeId!.toString());
+  const id = parseInt((router.query.pokeId||"1").toString());
 
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
   const { selectedLanguage } = useLanguage();
@@ -120,7 +120,9 @@ function Moves() {
     }
   };
 
-  return pokemonData ? (
+  if (!pokemonData) return <div>Loading...</div>
+
+  return (
     <div className="w-full">
       <Layout title={GetPokemonLanguageName()}>
         <div className="flex flex-row mb-5 mx-5 items-center">
@@ -174,9 +176,7 @@ function Moves() {
         </div>
       </Layout>
     </div>
-  ) : (
-    <div>Loading</div>
-  );
+  )
 }
 
 Moves.getLayout = function getLayout(page: ReactElement) {

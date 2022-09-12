@@ -12,7 +12,7 @@ import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
 
 function Types() {
   const router = useRouter();
-  const id = parseInt(router.query.pokeId!.toString());
+  const id = parseInt((router.query.pokeId||"1").toString());
 
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
   const { selectedLanguage } = useLanguage();
@@ -74,6 +74,8 @@ function Types() {
       </div>
     );
   };
+
+  if (!pokemonData) return <div>Loading...</div>
 
   return (
     <div className="w-full">

@@ -1,6 +1,7 @@
 import { Dropdown } from "flowbite-react";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useState } from "react";
 import { AiOutlineIssuesClose } from "react-icons/ai";
 import { RiCloseCircleFill } from "react-icons/ri";
@@ -11,11 +12,11 @@ import PokemonLayout from "../../../components/layouts/PokemonLayout";
 import { getTypeColor } from "../../../components/TypeColor";
 import { useLanguage } from "../../../context/Language/LanguageContext";
 import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
-interface PokeId {
-  id: number;
-}
 
-function Moves({ id }: PokeId) {
+function Moves() {
+  const router = useRouter();
+  const id = parseInt(router.query.pokeId!.toString());
+
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
   const { selectedLanguage } = useLanguage();
   const [pokemonName, setPokemonName] = useState("");
@@ -182,18 +183,3 @@ Moves.getLayout = function getLayout(page: ReactElement) {
   return <PokemonLayout menuName="moves">{page}</PokemonLayout>;
 };
 export default Moves;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    const id = context.query.pokeId;
-    return {
-      props: {
-        id,
-      },
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
-};

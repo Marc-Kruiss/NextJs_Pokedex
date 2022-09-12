@@ -25,11 +25,10 @@ import { useLanguage } from "../../../context/Language/LanguageContext";
 import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
 import { GetPokemonLanguageName } from "../../../components/helper/language";
 
-interface PokeId {
-  id: number;
-}
+function PokemonDetail() {
+  const router = useRouter();
+  const id = parseInt(router.query.pokeId!.toString());
 
-function PokemonDetail({ id }: PokeId) {
   //#region Variables
   const { selectedLanguage } = useLanguage();
 
@@ -193,19 +192,3 @@ PokemonDetail.getLayout = function getLayout(page: ReactElement) {
   return <PokemonLayout menuName="index">{page}</PokemonLayout>;
 };
 export default PokemonDetail;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    const id = context.query.pokeId;
-
-    return {
-      props: {
-        id,
-      },
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
-};

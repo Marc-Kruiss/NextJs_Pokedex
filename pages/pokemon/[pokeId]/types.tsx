@@ -1,5 +1,6 @@
 import { GetServerSideProps } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useState } from "react";
 import { GetPokemonLanguageName } from "../../../components/helper/language";
 import { TypeInfo } from "../../../components/helper/pokemonContext";
@@ -9,11 +10,10 @@ import { getTypeColor } from "../../../components/TypeColor";
 import { useLanguage } from "../../../context/Language/LanguageContext";
 import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
 
-interface PokeId {
-  id: number;
-}
+function Types() {
+  const router = useRouter();
+  const id = parseInt(router.query.pokeId!.toString());
 
-function Types({ id }: PokeId) {
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
   const { selectedLanguage } = useLanguage();
   const [pokemonName, setPokemonName] = useState("");
@@ -136,18 +136,3 @@ Types.getLayout = function getLayout(page: ReactElement) {
   return <PokemonLayout menuName="types">{page}</PokemonLayout>;
 };
 export default Types;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    const id = context.query.pokeId;
-    return {
-      props: {
-        id,
-      },
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
-};

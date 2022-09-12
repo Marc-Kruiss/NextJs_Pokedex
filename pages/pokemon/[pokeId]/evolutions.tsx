@@ -1,4 +1,5 @@
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import React, { ReactElement, useEffect, useState } from "react";
 import { GetPokemonLanguageName } from "../../../components/helper/language";
 import { capitalize } from "../../../components/helper/utilities";
@@ -8,12 +9,10 @@ import Pokemon from "../../../components/Pokemon";
 import { useLanguage } from "../../../context/Language/LanguageContext";
 import { usePokemonInfo } from "../../../context/Pokemon/PokemonInfoContext";
 
-interface PokeId {
-  id: number;
-}
-
 function Evolutions() {
-  const id = 1
+  const router = useRouter();
+  const id = parseInt(router.query.pokeId!.toString());
+
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
   const { selectedLanguage } = useLanguage();
   const [pokemonName, setPokemonName] = useState("");
@@ -38,24 +37,16 @@ function Evolutions() {
       ? pokemonData.evolvingChain.map((chainEntry, index) => {
           if (index < pokemonData.evolvingChain.length - 1) {
             return (
-              <div>
-                <div
-                  key={index}
-                  className="m-5 flex flex-row place-content-evenly"
-                >
+              <div key={index}>
+                <div className="m-5 flex flex-row place-content-evenly">
                   <div className="">
-                    <Pokemon
-                      name={chainEntry.name}
-                      index={chainEntry.index}
-                    />
+                    <Pokemon name={chainEntry.name} index={chainEntry.index} />
                   </div>
                   <p className="place-self-center">Level xy</p>
                   <div>
                     <Pokemon
                       name={chainEntry.name}
-                      index={
-                        pokemonData.evolvingChain[index+1].index
-                      }
+                      index={pokemonData.evolvingChain[index + 1].index}
                     />
                   </div>
                 </div>
@@ -88,4 +79,3 @@ Evolutions.getLayout = function getLayout(page: ReactElement) {
   return <PokemonLayout menuName="evolutions">{page}</PokemonLayout>;
 };
 export default Evolutions;
-

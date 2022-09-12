@@ -12,7 +12,8 @@ interface PokeId {
   id: number;
 }
 
-function Evolutions({ id }: PokeId) {
+function Evolutions() {
+  const id = 1
   const { initPokemonInfo, pokemonData } = usePokemonInfo();
   const { selectedLanguage } = useLanguage();
   const [pokemonName, setPokemonName] = useState("");
@@ -88,17 +89,3 @@ Evolutions.getLayout = function getLayout(page: ReactElement) {
 };
 export default Evolutions;
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  try {
-    const id = context.query.pokeId;
-    return {
-      props: {
-        id,
-      },
-    };
-  } catch (error) {
-    return {
-      notFound: true,
-    };
-  }
-};

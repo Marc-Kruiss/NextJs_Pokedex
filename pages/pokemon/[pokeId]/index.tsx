@@ -197,24 +197,6 @@ export default PokemonDetail;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     const id = context.query.pokeId;
-    /*const poke_response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${context.query.name}`
-    );
-    const pokemon_json = await poke_response.json();
-
-    // get species info
-    const species_info_url = pokemon_json.species.url;
-    const species_response = await fetch(species_info_url);
-    const pokemonInfo: IPokemonInfo = await species_response
-      .json()
-      .then((species_json) => mapPokemonInfo(species_json, pokemon_json));
-
-    // get evolving - chain
-    const evolvingChainPokemons = await getEvolvingChainNamesByUrl(
-      pokemonInfo.evolution_chain_url,
-      pokemon_json.name
-    );
-    console.log(evolvingChainPokemons);*/
 
     return {
       props: {
